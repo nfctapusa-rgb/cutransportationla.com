@@ -41,7 +41,7 @@ textarea{min-height:12rem;resize:vertical;line-height:1.5}
 .err{color:var(--warn);min-height:1.3rem;font-size:.95rem}
 
 /* app shell */
-.app{display:grid;grid-template-rows:auto 1fr;height:100%}
+.app{display:grid;grid-template-rows:auto 1fr;height:100%;overflow-x:hidden}
 .top{display:flex;align-items:center;gap:.6rem;padding:.6rem 1rem;padding-top:calc(.6rem + env(safe-area-inset-top));border-bottom:1px solid var(--line);background:var(--bg2);position:sticky;top:0;z-index:5}
 .top img{width:34px}
 .top h1{font-family:var(--disp);font-size:1.3rem;letter-spacing:.06em;text-transform:uppercase;margin:0 auto 0 0;line-height:1}
@@ -84,7 +84,12 @@ textarea{min-height:12rem;resize:vertical;line-height:1.5}
 .spin{width:1.1rem;height:1.1rem;border:2px solid var(--line2);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;display:inline-block;vertical-align:-3px}
 @keyframes sp{to{transform:rotate(360deg)}}
 @media(max-width:800px){
- .main{grid-template-columns:1fr}
+ .main{grid-template-columns:minmax(0,1fr)}
+ .top{gap:.4rem;padding-left:.7rem;padding-right:.7rem}
+ .top h1{font-size:1.1rem;min-width:0}
+ .top h1 small{display:none}
+ .top img{width:28px}
+ .iconbtn{width:2.4rem;height:2.4rem}
  .listpane{border-right:0}
  .main.reading .listpane{display:none}
  .main:not(.reading) .readpane{display:none}
@@ -98,6 +103,7 @@ textarea{min-height:12rem;resize:vertical;line-height:1.5}
  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></symbol>
  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"/></symbol>
  <symbol id="i-out" viewBox="0 0 24 24"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></symbol>
+ <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
 </svg>
 
@@ -122,6 +128,7 @@ textarea{min-height:12rem;resize:vertical;line-height:1.5}
   <h1>CU Inbox<small>info@cutransportationla.com</small></h1>
   <button class="iconbtn" id="refreshBtn" aria-label="Refresh"><svg class="ic"><use href="#i-refresh"/></svg></button>
   <button class="iconbtn" id="composeBtn" aria-label="New email"><svg class="ic"><use href="#i-pen"/></svg></button>
+  <button class="iconbtn" id="settingsBtn" aria-label="Settings"><svg class="ic"><use href="#i-gear"/></svg></button>
   <button class="iconbtn" id="logoutBtn" aria-label="Sign out"><svg class="ic"><use href="#i-out"/></svg></button>
  </header>
  <div class="main" id="main">
@@ -220,6 +227,22 @@ function compose(d){$('#main').classList.add('reading');var pane=$('#readpane');
  $('#cform').addEventListener('submit',function(e){e.preventDefault();var b=$('#csend');b.disabled=true;b.innerHTML='<span class="spin"></span> Sending';
   api('/api/send',{method:'POST',body:{to:$('#cto').value,subject:$('#csub').value,text:$('#cbody').value,inReplyTo:inReply,references:refs}})
   .then(function(){toast('Sent');closeReader();if(state.folder==='sent')load(true)}).catch(function(err){if(err.message!=='auth')toast(err.message)}).then(function(){if(b.isConnected){b.disabled=false;b.textContent='Send'}})})}
+function settings(){state.current=null;render();$('#main').classList.add('reading');var pane=$('#readpane');pane.scrollTop=0;
+ pane.innerHTML='<form class="compose" id="pform" autocomplete="on">'+backBtn()+'<h2 style="font-family:var(--disp);margin:0;text-transform:uppercase;letter-spacing:.04em">Change password</h2>'+
+ '<input type="text" name="username" value="info@cutransportationla.com" autocomplete="username" hidden>'+
+ '<label for="pcur">Current password</label><input type="password" id="pcur" autocomplete="current-password" required>'+
+ '<label for="pnew">New password</label><input type="password" id="pnew" autocomplete="new-password" minlength="8" required>'+
+ '<label for="pnew2">New password again</label><input type="password" id="pnew2" autocomplete="new-password" minlength="8" required>'+
+ '<div class="err" id="perr" role="alert"></div><div class="acts"><button class="btn" type="submit" id="psave">Save new password</button><button class="btn btn--ghost" type="button" data-act="back">Cancel</button></div>'+
+ '<p style="color:var(--dim);margin:.5rem 0 0">Use at least 8 characters. You stay signed in on this device.</p></form>';
+ wire();$('#pcur').focus();
+ $('#pform').addEventListener('submit',function(e){e.preventDefault();var err=$('#perr');err.textContent='';
+  if($('#pnew').value.length<8){err.textContent='Use at least 8 characters for the new password.';return}
+  if($('#pnew').value!==$('#pnew2').value){err.textContent='The two new passwords do not match.';return}
+  var b=$('#psave');b.disabled=true;b.innerHTML='<span class="spin"></span> Saving';
+  api('/api/password',{method:'POST',body:{current:$('#pcur').value,next:$('#pnew').value}}).then(function(){toast('Password changed');closeReader()})
+  .catch(function(e2){if(e2.message!=='auth')err.textContent=e2.message}).then(function(){if(b.isConnected){b.disabled=false;b.textContent='Save new password'}})})}
+$('#settingsBtn').addEventListener('click',settings);
 $('#composeBtn').addEventListener('click',function(){state.current=null;render();compose(null)});
 
 /* start: try to load; 401 shows sign-in */

@@ -89,4 +89,55 @@ async function readBody(req) {
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'); } catch (_) { return {}; }
 }
 
-module.exports = { guard, send, isAuthed, makeToken, setCookie, safeEqual, withImap, readBody, mailUser, MAX_AGE, env };
+// ---- owner-settable password, stored as a scrypt hash in a hidden IMAP folder ----
+const SETTINGS_FOLDER = 'CU Inbox Settings';
+const SETTINGS_SUBJECT = 'cu-inbox-password';
+
+function hashPassword(pw) {
+  const salt = crypto.randomBytes(16);
+  const h = crypto.scryptSync(String(pw), salt, 32);
+  return 'scrypt$' + salt.toString('base64') + '$' + h.toString('base64');
+}
+function checkHash(pw, stored) {
+  const [alg, salt, h] = String(stored || '').split('$');
+  if (alg !== 'scrypt' || !salt || !h) return false;
+  const want = Buffer.from(h, 'base64');
+  const got = crypto.scryptSync(String(pw), Buffer.from(salt, 'base64'), want.length);
+  return crypto.timingSafeEqual(want, got);
+}
+async function readStoredHash(client) {
+  const list = await client.list();
+  if (!list.find((b) => b.path === SETTINGS_FOLDER)) return null;
+  const lock = await client.getMailboxLock(SETTINGS_FOLDER);
+  try {
+    if (!client.mailbox.exists) return null;
+    let found = null;
+    for await (const m of client.fetch('1:*', { envelope: true, source: true })) {
+      if (m.envelope && m.envelope.subject === SETTINGS_SUBJECT) {
+        const body = m.source.toString('utf8').split(/\r?\n\r?\n/).slice(1).join('\n').trim();
+        if (body.startsWith('scrypt$')) found = body.split(/\s/)[0];
+      }
+    }
+    return found;
+  } finally { lock.release(); }
+}
+async function writeStoredHash(client, hash) {
+  const list = await client.list();
+  if (!list.find((b) => b.path === SETTINGS_FOLDER)) await client.mailboxCreate(SETTINGS_FOLDER);
+  const lock = await client.getMailboxLock(SETTINGS_FOLDER);
+  try {
+    if (client.mailbox.exists) await client.messageDelete('1:*');
+  } finally { lock.release(); }
+  const raw = 'From: CU Inbox <' + mailUser() + '>\r\nTo: ' + mailUser() + '\r\nSubject: ' + SETTINGS_SUBJECT +
+    '\r\nDate: ' + new Date().toUTCString() + '\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n' + hash +
+    '\r\n\r\nThis note stores the CU Inbox password (scrambled). Do not delete it unless you want to reset the inbox password back to the original one.\r\n';
+  await client.append(SETTINGS_FOLDER, raw, ['\\Seen']);
+}
+// The admin password (INBOX_PASSWORD env var) always works, as a recovery key.
+async function verifyPassword(pw) {
+  if (process.env.INBOX_PASSWORD && safeEqual(pw, process.env.INBOX_PASSWORD)) return true;
+  const stored = await withImap(readStoredHash);
+  return stored ? checkHash(pw, stored) : false;
+}
+
+module.exports = { hashPassword, verifyPassword, writeStoredHash, guard, send, isAuthed, makeToken, setCookie, safeEqual, withImap, readBody, mailUser, MAX_AGE, env };
