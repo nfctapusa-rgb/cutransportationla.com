@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /inbox
+Disallow: /api/
 
 Sitemap: https://cutransportationla.com/sitemap.xml
