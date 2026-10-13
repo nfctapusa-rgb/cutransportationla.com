@@ -158,6 +158,34 @@ button{cursor:pointer}
  .replybox{margin:0 1rem 1.2rem}
  .rhead .ract{display:none}
 }
+
+/* ---------- first-time setup ---------- */
+.ob{position:fixed;inset:0;z-index:60;background:rgba(3,8,9,.72);display:grid;place-items:center;padding:1rem;overflow-y:auto}
+.ob__card{width:min(480px,100%);background:#fff;border-radius:12px;box-shadow:0 30px 80px -20px rgba(0,0,0,.6);overflow:hidden}
+.ob__top{background:linear-gradient(90deg,var(--brand-deep),#0f8f9b 60%,var(--brand));color:#fff;padding:1.2rem 1.4rem;display:flex;align-items:center;gap:.8rem}
+.ob__top img{width:44px}
+.ob__top b{font-family:var(--disp);font-size:1.3rem;letter-spacing:.05em;text-transform:uppercase;line-height:1}
+.ob__top small{display:block;font-family:var(--body);text-transform:none;letter-spacing:0;font-size:.85rem;opacity:.9;font-weight:500;margin-top:.2rem}
+.ob__dots{display:flex;gap:.35rem;margin-left:auto}
+.ob__dots i{width:.55rem;height:.55rem;border-radius:50%;background:rgba(255,255,255,.4)}
+.ob__dots i.on{background:#fff}
+.ob__body{padding:1.4rem;display:grid;gap:.85rem}
+.ob__body h2{margin:0;font-size:1.35rem;line-height:1.2}
+.ob__body p{margin:0;color:#3c4a4d}
+.ob__body label{font-size:.85rem;font-weight:600;color:var(--dim)}
+.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:.7rem}
+.steps li{counter-increment:s;display:grid;grid-template-columns:2rem 1fr;gap:.7rem;align-items:start}
+.steps li::before{content:counter(s);width:2rem;height:2rem;border-radius:50%;background:var(--sel);color:var(--accent);font-weight:700;display:grid;place-items:center}
+.steps b{color:var(--ink)}
+.kbd{display:inline-flex;align-items:center;gap:.25rem;padding:.05rem .4rem;border:1px solid var(--line);border-radius:4px;background:var(--hover);font-weight:600;white-space:nowrap}
+.kbd svg{width:1rem;height:1rem}
+.ob__foot{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;padding:0 1.4rem 1.4rem}
+.ob__foot .skip{margin-left:auto;border:0;background:none;color:var(--dim);text-decoration:underline;text-underline-offset:3px}
+.ok{display:flex;gap:.6rem;align-items:center;padding:.7rem .9rem;border-radius:6px;background:#e7f6ec;color:#14532d;font-weight:600}
+.tip{font-size:.9rem;color:var(--dim)}
+.nbar{display:flex;align-items:center;gap:.6rem;padding:.6rem 1rem;background:#fff7ed;border-bottom:1px solid #fde4c8;color:#7c2d12;font-size:.9rem}
+.nbar button{white-space:nowrap;margin-left:auto;border:0;background:var(--brand-deep);color:#fff;border-radius:4px;padding:.35rem .7rem;font-weight:600;font-size:.85rem}
+.nbar .x{margin-left:.2rem;background:none;color:#7c2d12;padding:.2rem .4rem}
 </style>
 </head>
 <body>
@@ -176,6 +204,10 @@ button{cursor:pointer}
  <symbol id="i-fwd" viewBox="0 0 24 24"><path d="M14 8l5 4-5 4M19 12h-9a5 5 0 0 0-5 5v1"/></symbol>
  <symbol id="i-unread" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 8l9 6 9-6"/></symbol>
  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+ <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4M6 11H5v10h14V11h-1"/></symbol>
+ <symbol id="i-plus" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></symbol>
+ <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0"/></symbol>
+ <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="19" r="1.4"/></symbol>
  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></symbol>
 </svg>
 
@@ -207,6 +239,7 @@ button{cursor:pointer}
   <div class="contact"><a href="https://cutransportationla.com" target="_blank" rel="noopener">cutransportationla.com</a></div>
   <ul class="nav" role="list" style="margin-top:.8rem">
    <li><button id="settingsBtn"><svg class="ic"><use href="#i-gear"/></svg>Change password</button></li>
+   <li><button id="setupBtn"><svg class="ic"><use href="#i-bell"/></svg>Notifications &amp; app setup</button></li>
    <li><button id="logoutBtn"><svg class="ic"><use href="#i-out"/></svg>Sign out</button></li>
   </ul>
   <div class="foot"><span class="av" style="background:var(--brand-deep)">C</span><span>info@cutransportationla.com</span></div>
@@ -225,12 +258,14 @@ button{cursor:pointer}
  <section class="listpane" aria-label="Messages">
   <div class="lhead"><h2 id="folderTitle">Inbox</h2><span id="folderCount"></span>
    <div class="tools"><button class="tool" id="refreshBtn2" aria-label="Refresh"><svg class="ic"><use href="#i-refresh"/></svg></button></div></div>
+  <div class="nbar hide" id="nbar"><svg class="ic"><use href="#i-bell"/></svg><span>Get a buzz when new quote requests come in.</span><button id="nbarOn">Turn on</button><button class="x" id="nbarX" aria-label="Hide">&times;</button></div>
   <ul class="list" id="list"><li class="empty"><span class="spin"></span> Loading&hellip;</li></ul>
  </section>
 
  <section class="readpane" id="readpane" aria-live="polite"></section>
 </div>
 
+<div class="ob hide" id="ob" role="dialog" aria-modal="true" aria-labelledby="obTitle"><div class="ob__card"><div class="ob__top"><img src="/assets/logo-mark.png" alt=""><b>CU Inbox<small id="obSub">Quick setup</small></b><div class="ob__dots" id="obDots"></div></div><div id="obPane"></div></div></div>
 <div class="toast hide" id="toast" role="status"></div>
 
 <script>
@@ -256,9 +291,9 @@ function apiFolder(){return state.folder==='quotes'?'inbox':state.folder}
 
 /* ---- views ---- */
 function showLogin(){$('#appView').classList.add('hide');$('#loginView').classList.remove('hide');setTimeout(function(){$('#pw').focus()},50)}
-function showApp(){$('#loginView').classList.add('hide');$('#appView').classList.remove('hide');closeReader();load()}
+function showApp(){$('#loginView').classList.add('hide');$('#appView').classList.remove('hide');closeReader();load();afterSignIn()}
 $('#loginForm').addEventListener('submit',function(e){e.preventDefault();var b=$('#loginBtn');b.disabled=true;$('#loginErr').textContent='';
- api('/api/login',{method:'POST',body:{password:$('#pw').value}}).then(function(){$('#pw').value='';showApp()}).catch(function(err){if(err.message!=='auth')$('#loginErr').textContent=err.message}).then(function(){b.disabled=false})});
+ var typed=$('#pw').value;api('/api/login',{method:'POST',body:{password:typed}}).then(function(j){$('#pw').value='';state.setupPw=j.setup?typed:null;showApp()}).catch(function(err){if(err.message!=='auth')$('#loginErr').textContent=err.message}).then(function(){b.disabled=false})});
 $('#logoutBtn').addEventListener('click',function(){api('/api/logout',{method:'POST'}).catch(function(){}).then(showLogin)});
 function nav(open){$('#appView').classList.toggle('nav-open',open)}
 $('#menuBtn').addEventListener('click',function(){nav(true)});$('#scrim').addEventListener('click',function(){nav(false)});
@@ -366,6 +401,92 @@ function settings(){state.current=null;render();nav(false);$('#appView').classLi
   api('/api/password',{method:'POST',body:{current:$('#pcur').value,next:$('#pnew').value}}).then(function(){toast('Password changed');closeReader()})
   .catch(function(e2){if(e2.message!=='auth')err.textContent=e2.message}).then(function(){if(b.isConnected){b.disabled=false;b.textContent='Save new password'}})})}
 $('#settingsBtn').addEventListener('click',settings);
+
+
+/* ---- first-time setup, install-to-home-screen, notifications ---- */
+var LS='cuinbox-setup';function ls(){try{return JSON.parse(localStorage.getItem(LS)||'{}')}catch(_){return {}}}function lsSet(k,v){try{var o=ls();o[k]=v;localStorage.setItem(LS,JSON.stringify(o))}catch(_){}}
+var ua=navigator.userAgent||'';var isIOS=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+var isAndroid=/Android/i.test(ua);var isIOSSafari=isIOS&&/Safari/.test(ua)&&!/CriOS|FxiOS|EdgiOS|GSA/.test(ua);
+function standalone(){return (window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true}
+var pushOK='serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
+var swReg=null,deferredInstall=null,me={};
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredInstall=e});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/inbox/sw.js',{scope:'/inbox'}).then(function(r){swReg=r}).catch(function(){});
+ navigator.serviceWorker.addEventListener('message',function(e){if(e.data&&e.data.type==='refresh')load(true)})}
+function notifOn(){return pushOK&&Notification.permission==='granted'&&ls().pushOn}
+function updateBar(){var show=!notifOn()&&!ls().barHidden&&(pushOK||isIOS)&&!(isIOS&&!standalone()&&ls().installSeen&&!pushOK);$('#nbar').classList.toggle('hide',!show)}
+$('#nbarOn').addEventListener('click',function(){wizard(['notify'])});$('#nbarX').addEventListener('click',function(){lsSet('barHidden',true);updateBar()});
+$('#setupBtn').addEventListener('click',function(){nav(false);wizard(['install','notify'])});
+function afterSignIn(){api('/api/me').then(function(j){me=j;var steps=[];
+ if(j.setup)steps.push('password');
+ if(!standalone()&&!ls().installSeen)steps.push('install');
+ if(!notifOn()&&!ls().notifySeen)steps.push('notify');
+ if(steps.length)wizard(steps,true);updateBar()}).catch(function(){})}
+
+var wz={steps:[],i:0};
+function wizard(steps,first){wz.steps=steps;wz.i=0;wz.first=first;$('#ob').classList.remove('hide');step()}
+function done(){$('#ob').classList.add('hide');updateBar()}
+function next(){wz.i++;if(wz.i>=wz.steps.length){finish()}else step()}
+function finish(){if(wz.first){$('#obDots').innerHTML='';$('#obSub').textContent='All set';
+ $('#obPane').innerHTML='<div class="ob__body"><div class="ok">&#10003; You&rsquo;re all set</div><p>New emails and quote requests from the website show up here. You&rsquo;ll stay signed in on this device.</p><p class="tip">You can change your password or turn notifications on later from the menu.</p></div><div class="ob__foot"><button class="btn btn--dark" id="obGo">Go to my inbox</button></div>';
+ $('#obGo').addEventListener('click',done);$('#obGo').focus()}else done()}
+function dots(){$('#obDots').innerHTML=wz.steps.length>1?wz.steps.map(function(_,k){return '<i class="'+(k<=wz.i?'on':'')+'"></i>'}).join(''):''}
+function step(){dots();var k=wz.steps[wz.i];({password:stepPassword,install:stepInstall,notify:stepNotify})[k]()}
+
+function stepPassword(){$('#obSub').textContent='Step '+(wz.i+1)+' of '+wz.steps.length;var need=!state.setupPw;
+ $('#obPane').innerHTML='<form class="ob__body" id="obPw" autocomplete="on"><h2 id="obTitle">Welcome, Carlos! Create your password</h2><p>This is the password you&rsquo;ll use to open your inbox. Only you will know it.</p>'+
+ '<input type="text" name="username" value="info@cutransportationla.com" autocomplete="username" hidden>'+
+ (need?'<label for="obCur">Setup password (the one you just used)</label><input class="field" type="password" id="obCur" autocomplete="current-password" required>':'')+
+ '<label for="obNew">New password</label><input class="field" type="password" id="obNew" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters">'+
+ '<label for="obNew2">Type it again</label><input class="field" type="password" id="obNew2" autocomplete="new-password" minlength="8" required>'+
+ '<label style="display:flex;gap:.5rem;align-items:center;font-weight:500;color:var(--ink)"><input type="checkbox" id="obShow"> Show password</label>'+
+ '<div class="err" id="obErr" role="alert"></div><p class="tip">Tip: when your phone offers to save the password, tap <b>Save</b> so you never have to type it again.</p>'+
+ '<button class="btn btn--dark" type="submit" id="obSave">Save my password</button></form>';
+ setTimeout(function(){($('#obCur')||$('#obNew')).focus()},50);
+ $('#obShow').addEventListener('change',function(e){['obNew','obNew2','obCur'].forEach(function(id){var el=$('#'+id);if(el)el.type=e.target.checked?'text':'password'})});
+ $('#obPw').addEventListener('submit',function(e){e.preventDefault();var err=$('#obErr'),a=$('#obNew').value,b2=$('#obNew2').value;err.textContent='';
+  if(a.length<8){err.textContent='Use at least 8 characters.';return}if(a!==b2){err.textContent='The two passwords don’t match.';return}
+  var btn=$('#obSave');btn.disabled=true;btn.innerHTML='<span class="spin"></span> Saving';
+  api('/api/password',{method:'POST',body:{current:state.setupPw||$('#obCur').value,next:a}}).then(function(){state.setupPw=null;
+   try{if(window.PasswordCredential&&navigator.credentials){navigator.credentials.store(new PasswordCredential({id:'info@cutransportationla.com',password:a,name:'CU Inbox'})).catch(function(){})}}catch(_){}
+   toast('Password saved');next()}).catch(function(e2){if(e2.message!=='auth')err.textContent=e2.message}).then(function(){if(btn.isConnected){btn.disabled=false;btn.textContent='Save my password'}})})}
+
+function stepInstall(){$('#obSub').textContent='Step '+(wz.i+1)+' of '+wz.steps.length;var h='<div class="ob__body"><h2 id="obTitle">Put CU Inbox on your home screen</h2>';
+ if(standalone()){h+='<div class="ok">&#10003; Already on your home screen</div></div>'}
+ else if(isIOS&&!isIOSSafari){h+='<p>On iPhone, this works from <b>Safari</b>. Copy this link and open it in Safari:</p><p><span class="kbd">cutransportationla.com/inbox</span></p><button class="btn btn--line" id="obCopy" type="button">Copy link</button></div>'}
+ else if(isIOS){h+='<p>It opens like a regular app and keeps you signed in.</p><ol class="steps">'+
+  '<li><span>Tap the <span class="kbd"><svg class="ic"><use href="#i-share"/></svg>Share</span> button at the bottom of Safari.</span></li>'+
+  '<li><span>Scroll down and tap <b><span class="kbd"><svg class="ic"><use href="#i-plus"/></svg>Add to Home Screen</span></b>.</span></li>'+
+  '<li><span>Tap <b>Add</b> in the top right corner.</span></li>'+
+  '<li><span>Open <b>CU Inbox</b> from your home screen from now on.</span></li></ol></div>'}
+ else if(deferredInstall){h+='<p>Install it as an app so it opens in one tap and keeps you signed in.</p><button class="btn btn--dark" id="obInstall" type="button"><svg class="ic"><use href="#i-plus"/></svg>Add to home screen</button></div>'}
+ else if(isAndroid){h+='<ol class="steps"><li><span>Tap the <span class="kbd"><svg class="ic"><use href="#i-dots"/></svg>menu</span> at the top right of Chrome.</span></li><li><span>Tap <b>Add to Home screen</b> (or <b>Install app</b>).</span></li><li><span>Tap <b>Install</b> / <b>Add</b>, then open <b>CU Inbox</b> from your home screen.</span></li></ol></div>'}
+ else{h+='<p>On a computer, bookmark this page, or click the <b>install</b> icon at the right end of Chrome&rsquo;s address bar.</p><p class="tip">On your phone, open <b>cutransportationla.com/inbox</b> and come back to this screen from the menu: <b>Notifications &amp; app setup</b>.</p></div>'}
+ $('#obPane').innerHTML=h+'<div class="ob__foot"><button class="btn btn--dark" id="obNext" type="button">'+(isIOS&&!standalone()?'I added it':'Next')+'</button><button class="skip" id="obSkip" type="button">Skip for now</button></div>';
+ var ins=$('#obInstall');if(ins)ins.addEventListener('click',function(){deferredInstall.prompt();deferredInstall.userChoice.then(function(c){if(c.outcome==='accepted'){toast('Added to home screen');lsSet('installSeen',true);next()}});deferredInstall=null});
+ var cp=$('#obCopy');if(cp)cp.addEventListener('click',function(){try{navigator.clipboard.writeText('https://cutransportationla.com/inbox');toast('Link copied')}catch(_){}});
+ $('#obNext').addEventListener('click',function(){lsSet('installSeen',true);if(isIOS&&!standalone()){iosNextHint();return}next()});
+ $('#obSkip').addEventListener('click',function(){lsSet('installSeen',true);next()})}
+function iosNextHint(){var h='<div class="ob__body"><h2 id="obTitle">Now open it from your home screen</h2><p>Close Safari and tap the new <b>CU Inbox</b> icon. You&rsquo;ll already be signed in.</p><p>On iPhone, notifications can only be turned on from the home-screen app, so we&rsquo;ll ask you there.</p></div><div class="ob__foot"><button class="btn btn--dark" id="obOk" type="button">Got it</button></div>';
+ $('#obPane').innerHTML=h;$('#obOk').addEventListener('click',function(){wz.steps=wz.steps.filter(function(s){return s!=='notify'});if(wz.i>=wz.steps.length-1){wz.i=wz.steps.length;finish()}else next()})}
+
+function stepNotify(){$('#obSub').textContent='Step '+(wz.i+1)+' of '+wz.steps.length;var h='<div class="ob__body"><h2 id="obTitle">Turn on notifications</h2>';
+ var canAsk=pushOK&&me.vapidKey&&!(isIOS&&!standalone());
+ if(notifOn())h+='<div class="ok">&#10003; Notifications are on for this device</div><button class="btn btn--line" id="obTest" type="button">Send a test notification</button>';
+ else if(isIOS&&!standalone())h+='<p>On iPhone, notifications work once CU Inbox is on your home screen. Add it first, then open it from the home-screen icon and tap <b>Notifications &amp; app setup</b> in the menu.</p>';
+ else if(!pushOK)h+='<p>This browser can&rsquo;t show notifications. Try Chrome or Safari.</p>';
+ else if(Notification.permission==='denied')h+='<p>Notifications are blocked for this site. Turn them on in your phone&rsquo;s <b>Settings</b> for '+(standalone()?'<b>CU Inbox</b>':'this browser')+', then come back here.</p>';
+ else h+='<p>Get an alert on this phone when a customer emails or sends a quote request, even when the app is closed.</p><button class="btn btn--dark" id="obAllow" type="button"><svg class="ic"><use href="#i-bell"/></svg>Turn on notifications</button><p class="tip">When your phone asks, tap <b>Allow</b>.</p>';
+ $('#obPane').innerHTML=h+'</div><div class="ob__foot"><button class="btn '+(canAsk&&!notifOn()?'btn--line':'btn--dark')+'" id="obNext" type="button">'+(wz.i>=wz.steps.length-1?'Done':'Next')+'</button>'+(notifOn()?'':'<button class="skip" id="obSkip" type="button">Not now</button>')+'</div>';
+ var al=$('#obAllow');if(al)al.addEventListener('click',function(){al.disabled=true;al.innerHTML='<span class="spin"></span> Turning on';enablePush().then(function(){toast('Notifications on');stepNotify()}).catch(function(e){al.disabled=false;al.textContent='Turn on notifications';toast(e.message||'Could not turn on notifications')})});
+ var ts=$('#obTest');if(ts)ts.addEventListener('click',function(){(swReg?Promise.resolve(swReg):navigator.serviceWorker.ready).then(function(r){r.showNotification('CU Inbox is ready',{body:'New quote requests will show up like this.',icon:'/icon-192.png'})})});
+ $('#obNext').addEventListener('click',function(){lsSet('notifySeen',true);next()});var sk=$('#obSkip');if(sk)sk.addEventListener('click',function(){lsSet('notifySeen',true);next()})}
+function b64ToU8(s){var p='='.repeat((4-s.length%4)%4);var b=atob((s+p).replace(/-/g,'+').replace(/_/g,'/'));var a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
+function enablePush(){if(!me.vapidKey)return Promise.reject(new Error('Notifications are not set up on the server yet.'));
+ return Notification.requestPermission().then(function(p){if(p!=='granted')throw new Error('Notifications were not allowed.');
+  return swReg?swReg:navigator.serviceWorker.register('/inbox/sw.js',{scope:'/inbox'})}).then(function(r){swReg=r;return navigator.serviceWorker.ready})
+ .then(function(r){return r.pushManager.getSubscription().then(function(s){return s||r.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToU8(me.vapidKey)})})})
+ .then(function(sub){return api('/api/push',{method:'POST',body:{subscription:sub.toJSON()}})}).then(function(){lsSet('pushOn',true);lsSet('notifySeen',true);updateBar()})}
 
 /* ---- start ---- */
 $('#readpane').innerHTML=placeholder();

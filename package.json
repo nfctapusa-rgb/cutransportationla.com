@@ -1,10 +1,13 @@
 {
   "name": "cutransportationla",
   "private": true,
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "imapflow": "1.0.164",
     "mailparser": "3.7.1",
-    "nodemailer": "6.9.14"
+    "nodemailer": "6.9.14",
+    "web-push": "3.6.7"
   }
 }

@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const { ImapFlow } = require('imapflow');
 
 const COOKIE = 'cu_inbox';
-const MAX_AGE = 60 * 60 * 24 * 30; // 30 days
+const MAX_AGE = 60 * 60 * 24 * 365; // stays signed in for a year (renewed on use)
 
 function env(name) {
   const v = process.env[name];
@@ -60,6 +60,7 @@ function guard(handler, { auth = true, methods = ['GET'] } = {}) {
     try {
       if (!methods.includes(req.method)) return send(res, 405, { error: 'Method not allowed' });
       if (auth && !isAuthed(req)) return send(res, 401, { error: 'Please sign in' });
+      if (auth) setCookie(res, makeToken(), MAX_AGE); // keep him signed in while he uses it
       await handler(req, res);
     } catch (e) {
       console.error(e);
@@ -89,9 +90,10 @@ async function readBody(req) {
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'); } catch (_) { return {}; }
 }
 
-// ---- owner-settable password, stored as a scrypt hash in a hidden IMAP folder ----
+// ---- small settings store: notes kept in a hidden IMAP folder (no database needed) ----
 const SETTINGS_FOLDER = 'CU Inbox Settings';
-const SETTINGS_SUBJECT = 'cu-inbox-password';
+const PASS_NOTE = 'cu-inbox-password';
+const PUSH_NOTE = 'cu-inbox-push';
 
 function hashPassword(pw) {
   const salt = crypto.randomBytes(16);
@@ -105,39 +107,55 @@ function checkHash(pw, stored) {
   const got = crypto.scryptSync(String(pw), Buffer.from(salt, 'base64'), want.length);
   return crypto.timingSafeEqual(want, got);
 }
-async function readStoredHash(client) {
+async function hasFolder(client) {
   const list = await client.list();
-  if (!list.find((b) => b.path === SETTINGS_FOLDER)) return null;
+  return !!list.find((b) => b.path === SETTINGS_FOLDER);
+}
+async function readNote(client, subject) {
+  if (!(await hasFolder(client))) return null;
   const lock = await client.getMailboxLock(SETTINGS_FOLDER);
   try {
     if (!client.mailbox.exists) return null;
     let found = null;
     for await (const m of client.fetch('1:*', { envelope: true, source: true })) {
-      if (m.envelope && m.envelope.subject === SETTINGS_SUBJECT) {
-        const body = m.source.toString('utf8').split(/\r?\n\r?\n/).slice(1).join('\n').trim();
-        if (body.startsWith('scrypt$')) found = body.split(/\s/)[0];
+      if (m.envelope && m.envelope.subject === subject) {
+        const parts = m.source.toString('utf8').split(/\r?\n\r?\n/);
+        found = parts.slice(1).join('\n\n').trim().split(/\r?\n/)[0].trim();
       }
     }
     return found;
   } finally { lock.release(); }
 }
-async function writeStoredHash(client, hash) {
-  const list = await client.list();
-  if (!list.find((b) => b.path === SETTINGS_FOLDER)) await client.mailboxCreate(SETTINGS_FOLDER);
+async function writeNote(client, subject, value, explain) {
+  if (!(await hasFolder(client))) await client.mailboxCreate(SETTINGS_FOLDER);
   const lock = await client.getMailboxLock(SETTINGS_FOLDER);
   try {
-    if (client.mailbox.exists) await client.messageDelete('1:*');
+    const uids = await client.search({ subject }, { uid: true });
+    const exact = [];
+    if (uids && uids.length) {
+      for await (const m of client.fetch(uids.join(','), { envelope: true, uid: true }, { uid: true })) if (m.envelope && m.envelope.subject === subject) exact.push(m.uid);
+    }
+    if (exact.length) await client.messageDelete(exact.join(','), { uid: true });
   } finally { lock.release(); }
-  const raw = 'From: CU Inbox <' + mailUser() + '>\r\nTo: ' + mailUser() + '\r\nSubject: ' + SETTINGS_SUBJECT +
-    '\r\nDate: ' + new Date().toUTCString() + '\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n' + hash +
-    '\r\n\r\nThis note stores the CU Inbox password (scrambled). Do not delete it unless you want to reset the inbox password back to the original one.\r\n';
+  const raw = 'From: CU Inbox <' + mailUser() + '>\r\nTo: ' + mailUser() + '\r\nSubject: ' + subject +
+    '\r\nDate: ' + new Date().toUTCString() + '\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n' + value +
+    '\r\n\r\n' + (explain || 'Used by CU Inbox. Please do not delete.') + '\r\n';
   await client.append(SETTINGS_FOLDER, raw, ['\\Seen']);
 }
-// The admin password (INBOX_PASSWORD env var) always works, as a recovery key.
-async function verifyPassword(pw) {
-  if (process.env.INBOX_PASSWORD && safeEqual(pw, process.env.INBOX_PASSWORD)) return true;
-  const stored = await withImap(readStoredHash);
-  return stored ? checkHash(pw, stored) : false;
+async function readStoredHash(client) {
+  const v = await readNote(client, PASS_NOTE);
+  return v && v.startsWith('scrypt$') ? v : null;
 }
+async function writeStoredHash(client, hash) {
+  await writeNote(client, PASS_NOTE, hash, 'This note stores the CU Inbox password (scrambled). Deleting it resets the inbox password to the original setup password.');
+}
+// Returns 'owner' for his own password, 'admin' for the setup/recovery password, or false.
+async function checkPassword(pw) {
+  const stored = await withImap(readStoredHash);
+  if (stored && checkHash(pw, stored)) return { ok: 'owner', setup: false };
+  if (process.env.INBOX_PASSWORD && safeEqual(pw, process.env.INBOX_PASSWORD)) return { ok: 'admin', setup: !stored };
+  return { ok: false, setup: !stored };
+}
+async function verifyPassword(pw) { return !!(await checkPassword(pw)).ok; }
 
-module.exports = { hashPassword, verifyPassword, writeStoredHash, guard, send, isAuthed, makeToken, setCookie, safeEqual, withImap, readBody, mailUser, MAX_AGE, env };
+module.exports = { hashPassword, verifyPassword, checkPassword, writeStoredHash, readStoredHash, readNote, writeNote, PUSH_NOTE, guard, send, isAuthed, makeToken, setCookie, safeEqual, withImap, readBody, mailUser, MAX_AGE, env };
