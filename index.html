@@ -11,7 +11,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="preload" as="image" href="/assets/hero-sprinter.webp" fetchpriority="high">
+<link rel="preload" as="image" href="/assets/hero-interior.webp" fetchpriority="high">
 <link rel="preload" as="image" href="/assets/hero-night.webp">
 <meta name="geo.region" content="US-CA">
 <meta name="geo.placename" content="Los Angeles">
@@ -101,7 +101,7 @@ p{margin:0 0 1rem;max-width:62ch}
 .hero__img{position:absolute;inset:0;z-index:-3;background-size:cover;background-position:50% 84%;background-repeat:no-repeat;transform:translate3d(calc(var(--px,0)*-10px),calc(var(--py,0)*-6px),0) scale(1.02);transition:transform .5s ease-out}
 .hero__img--dusk{background-image:var(--img-dusk)}
 .hero__img--night{background-image:var(--img-night);opacity:0}
-.hero__img--sprinter{background-image:url("/assets/hero-sprinter.webp");background-position:62% 70%;opacity:1;transition:opacity .9s ease,transform .5s ease-out}
+.hero__img--sprinter{background-image:url("/assets/hero-interior.webp");background-position:50% 35%;filter:brightness(.5) saturate(1.2);opacity:1;transition:opacity .9s ease,transform .5s ease-out}
 .hero__img--night{transition:opacity .9s ease,transform .5s ease-out}
 .rides{display:grid;gap:.5rem}
 .ride-btn{display:flex;justify-content:space-between;align-items:center;gap:1rem;width:100%;min-height:3rem;padding:.55rem .9rem;border:1px solid var(--line2);border-radius:4px;background:transparent;cursor:pointer;text-align:left;font-family:var(--disp);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:1.1rem;transition:background .2s,border-color .2s,color .2s}
@@ -315,7 +315,16 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
 @media(max-width:860px){.foot__grid{grid-template-columns:1fr}}
 
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.hero h1,.hero__p,.hero__cta,.hour,.hero__slogan-wrap{opacity:1}}
-@media(max-width:820px){.hero__img--sprinter{background-position:62% 75%}}
+.hero__car{position:absolute;z-index:-1;right:max(1rem,calc((100vw - 1200px)/2 - 1rem));top:15%;width:min(48vw,660px);filter:drop-shadow(0 30px 40px rgba(0,0,0,.6));transition:opacity .9s ease;pointer-events:none}
+.ride-btn img{width:4.2rem;height:2.6rem;object-fit:contain;flex:none}
+.ride-btn .rb-t{display:flex;flex-direction:column;line-height:1.1;margin-right:auto}
+.gal{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.5rem;margin-top:2.5rem}
+.gal figure{margin:0;position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/4}
+.gal img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.gal figure:hover img{transform:scale(1.05)}
+.gal figcaption{position:absolute;left:0;right:0;bottom:0;padding:1.6rem .6rem .5rem;background:linear-gradient(0deg,rgba(0,0,0,.8),transparent);font-family:var(--disp);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:.95rem}
+@media(max-width:860px){.gal{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:820px){.hero__img--sprinter{background-position:50% 30%}.hero__car{top:4.8rem;left:50%;right:auto;transform:translateX(-50%);width:min(92vw,520px)}}
 </style>
 
 </head>
@@ -359,6 +368,7 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
 <header class="hero" id="top">
  <div class="hero__img hero__img--night" id="imgVan"></div>
  <div class="hero__img hero__img--sprinter" id="imgSp"></div>
+ <img class="hero__car" id="heroCar" src="/assets/sprinter-cut.webp" alt="" aria-hidden="true" width="569" height="367" fetchpriority="high">
  <div class="hero__shade"></div>
  <div class="wrap hero__body">
   <div class="hero__copy">
@@ -367,7 +377,7 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
    <div class="hero__slogan-wrap">
     <p class="slogan disp" aria-live="polite" style="max-width:none"><span id="sDusk" style="opacity:0">Red carpet optional.</span><span id="sNight">Bring the whole crew.</span></p>
    </div>
-   <p class="hero__p">Private chauffeur service across Los Angeles. A Mercedes-Benz Sprinter party bus for the whole crew, and a black Chevy Express conversion van for airport runs and small groups. Flat rates, no surge, no hidden fees.</p>
+   <p class="hero__p">Private chauffeur service across Los Angeles. Two party-equipped rides: a Mercedes-Benz Sprinter party bus for the whole crew, and a black Chevy Express party van for smaller groups and airport runs. Flat rates, no surge, no hidden fees.</p>
    <div class="hero__cta">
     <a class="btn" href="#quote">Get a flat-rate quote</a>
     <a class="btn btn--ghost" href="#party">See the fleet</a>
@@ -376,8 +386,8 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
   <div class="hour">
    <div class="hour__row"><span>Pick your ride</span></div>
    <div class="rides" role="group" aria-label="Choose a vehicle">
-    <button class="ride-btn" data-r="1" aria-pressed="true">Party bus <small>Mercedes Sprinter</small></button>
-    <button class="ride-btn" data-r="0" aria-pressed="false">Conversion van <small>Chevy Express</small></button>
+    <button class="ride-btn" data-r="1" aria-pressed="true"><span class="rb-t">Sprinter party bus <small>Mercedes-Benz</small></span><img src="/assets/sprinter-cut.webp" alt=""></button>
+    <button class="ride-btn" data-r="0" aria-pressed="false"><span class="rb-t">Party van <small>Chevy Express</small></span><img src="/assets/van.webp" alt="" style="object-fit:cover;border-radius:3px"></button>
    </div>
   </div>
  </div>
@@ -464,7 +474,7 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
 
 <section class="sec" id="party">
  <div class="wrap">
-  <div class="sec__head"><h2 class="disp">The fleet</h2><p class="lede">Two ways to ride. The Mercedes-Benz Sprinter party bus when the whole crew is coming, and the Chevy Express conversion van for airport runs and small groups.</p></div>
+  <div class="sec__head"><h2 class="disp">The fleet</h2><p class="lede">Two party-equipped rides. The Mercedes-Benz Sprinter party bus is the main event; the Chevy Express party van is ready when your group is smaller.</p></div>
   <div class="party">
    <div class="phone"><video id="spVid" playsinline muted loop autoplay preload="metadata" poster="/assets/sprinter-poster.jpg" aria-label="Walkthrough of the Mercedes-Benz Sprinter party bus, outside and inside"><source src="/assets/sprinter.mp4" type="video/mp4"></video>
     <div class="phone__ui"><div class="phone__bar"><button class="pbtn" id="spPlay" aria-label="Play or pause the video"><svg class="ic" aria-hidden="true"><use id="spPlayUse" href="#i-pause"/></svg></button><div class="prog" aria-hidden="true"><i id="spProg"></i></div></div></div>
@@ -483,6 +493,14 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
     </div>
    </div>
   </div>
+  <div class="gal">
+   <figure><img loading="lazy" src="/assets/int-16.webp" alt="Sprinter interior with red LED ceiling lights and TV"><figcaption>LED lighting</figcaption></figure>
+   <figure><img loading="lazy" src="/assets/int-20.webp" alt="Sprinter interior with green lighting and flat-screen TV"><figcaption>Flat-screen TV</figcaption></figure>
+   <figure><img loading="lazy" src="/assets/int-40.webp" alt="Wraparound quilted leather seating"><figcaption>Wraparound seating</figcaption></figure>
+   <figure><img loading="lazy" src="/assets/int-12.webp" alt="Quilted leather bench with wood-style floor"><figcaption>Quilted leather</figcaption></figure>
+   <figure><img loading="lazy" src="/assets/int-25.webp" alt="Bar counter with cup holders and bottled water"><figcaption>Bar counter</figcaption></figure>
+   <figure><img loading="lazy" src="/assets/int-50.webp" alt="Mirrored LED ceiling and TV at the front of the cabin"><figcaption>Party ceiling</figcaption></figure>
+  </div>
  </div>
 </section>
 
@@ -499,8 +517,8 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
    </div>
   </div>
    <div>
-    <span class="lab">Chevy Express</span>
-    <h3 style="font-size:clamp(2rem,4vw,3rem);margin:.3rem 0 1rem">Conversion van</h3>
+    <span class="lab">Chevy Express &middot; party equipped</span>
+    <h3 style="font-size:clamp(2rem,4vw,3rem);margin:.3rem 0 1rem">Party van</h3>
     <p class="lede">A black 2021 Chevy Express conversion van, set up for a private ride from a quick airport run to an all-day booking.</p>
     <div class="chips" role="group" aria-label="Video chapters">
     <button class="chip" data-s="0" aria-pressed="true">Outside</button>
@@ -664,7 +682,7 @@ addEventListener("scroll",onScroll,{passive:true});onScroll();
 
 /* hero: van / sprinter switcher + pointer parallax */
 var hero=$("#top"),spL=$("#imgSp"),vanL=$("#imgVan"),sD=$("#sDusk"),sN=$("#sNight"),rb=$$(".ride-btn"),cur=0,auto=true;
-function setRide(i){cur=i;var n=i;spL.style.opacity=n;vanL.style.opacity=1-n;
+function setRide(i){cur=i;var n=i;spL.style.opacity=n;$("#heroCar").style.opacity=n;vanL.style.opacity=1-n;
  sD.style.opacity=1-n;sD.style.transform="translateY("+(-14*n)+"px)";
  sN.style.opacity=n;sN.style.transform="translateY("+(14*(1-n))+"px)";
  rb.forEach(function(b){b.setAttribute("aria-pressed",+b.dataset.r===i?"true":"false")});}
