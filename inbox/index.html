@@ -311,7 +311,7 @@ function badge(sel,n){var b=$(sel);if(n){b.textContent=n;b.classList.remove('hid
 function visible(){var items=state.items;if(state.folder==='quotes')items=items.filter(isQuote);
  if(state.q){var q=state.q.toLowerCase();items=items.filter(function(m){var a=person(m)||{};return (m.subject+' '+a.name+' '+a.address).toLowerCase().indexOf(q)>-1})}return items}
 function render(){var list=$('#list'),items=visible();$('#folderCount').textContent=items.length?items.length+(items.length===1?' message':' messages'):'';
- if(!items.length){list.innerHTML='<li class="empty">'+(state.q?'No messages match &ldquo;'+esc(state.q)+'&rdquo;.':state.folder==='quotes'?'No quote requests yet. They show up here when customers tap Email Carlos on the website.':'Nothing here yet.')+'</li>';return}
+ if(!items.length){list.innerHTML='<li class="empty">'+(state.q?'No messages match &ldquo;'+esc(state.q)+'&rdquo;.':state.folder==='quotes'?'No quote requests yet. They show up here when customers tap Email us on the website.':'Nothing here yet.')+'</li>';return}
  list.innerHTML='';items.forEach(function(m){var a=person(m)||{};var li=document.createElement('li');var unread=!m.seen&&state.folder!=='sent';
   li.className='item'+(unread?' unread':'');li.tabIndex=0;li.setAttribute('role','button');
   if(state.current&&state.current.uid===m.uid)li.setAttribute('aria-current','true');

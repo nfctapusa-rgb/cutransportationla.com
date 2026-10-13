@@ -399,7 +399,7 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
 
 <section class="sec sec--alt" id="book">
  <div class="wrap">
-  <div class="sec__head"><h2 class="disp">Get a custom quote</h2><p class="lede">Enter your pickup and drop-off addresses, including your own home or office. We estimate the mileage, then send the request to Carlos by text or email and he replies with a price.</p></div>
+  <div class="sec__head"><h2 class="disp">Get a custom quote</h2><p class="lede">Enter your pickup and drop-off addresses, including your own home or office. We estimate the mileage, then send your request by text or email and we reply with a price.</p></div>
   <div class="book">
    <form class="form" id="form" autocomplete="on" novalidate>
     <div class="fld full ac"><label class="lab" for="f-pick">Pickup address</label><input type="text" id="f-pick" name="pickup" placeholder="Your home, hotel, office or airport" autocomplete="street-address" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ac-pick"><ul class="ac__list" id="ac-pick" role="listbox" hidden></ul><button type="button" class="btn btn--ghost btn--sm ac__me" id="useMe">&#x2316; Use my current location</button></div>
@@ -419,8 +419,8 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
     <label class="lab" for="sumText">Your request</label>
     <textarea id="sumText" readonly></textarea>
     <div class="sum__row">
-     <a class="btn" id="smsReq" href="sms:+12137700389" data-sms>Text Carlos for a quote</a>
-     <a class="btn btn--ghost" id="mailReq" href="mailto:info@cutransportationla.com">Email Carlos</a>
+     <a class="btn" id="smsReq" href="sms:+12137700389" data-sms>Text us for a quote</a>
+     <a class="btn btn--ghost" id="mailReq" href="mailto:info@cutransportationla.com">Email us</a>
      <button class="btn btn--ghost" id="copyReq" type="button">Copy</button>
     </div>
     <p class="note" style="margin-top:1rem">Text or call <a href="tel:+12137700389" data-tel><b data-phone>(213) 770-0389</b></a>, or email <a href="mailto:info@cutransportationla.com"><b>info@cutransportationla.com</b></a>. Nothing is sent until you send it.</p>
@@ -777,7 +777,7 @@ $("#useDis").addEventListener("click",function(){$("#f-service").value="Disneyla
 
 /* booking summary */
 function build(){
- var L=["Hi Carlos, I would like a quote from Clarity Ultimate Transportation.",""];
+ var L=["Hi, I would like a quote from Clarity Ultimate Transportation.",""];
  function add(k,v){if(v)L.push(k+": "+v)}
  add("Name",F.name.value.trim());add("Phone",F.phone.value.trim());add("Service",F.service.value);
  if(F.date.value||F.time.value)add("Pickup",[F.date.value,F.time.value].filter(Boolean).join(" at "));
@@ -827,7 +827,7 @@ function calcDist(){var a=F.pick.value.trim(),b=F.drop.value.trim();
   var t=mn>=60?Math.floor(mn/60)+" hr "+(mn%60)+" min":mn+" min";
   state.dist="about "+mi.toFixed(1)+" miles, roughly "+t+" drive";
   dOut.innerHTML="";var bb=document.createElement("b");bb.textContent="~"+mi.toFixed(1)+" mi";dOut.appendChild(bb);dOut.appendChild(document.createTextNode(" · roughly "+t+" without traffic. Added to your quote request."));build()})
- .catch(function(e){state.dist="";dOut.textContent=/nf:/.test(e.message)?"Couldn't find “"+e.message.slice(3)+"”. Pick an address from the suggestions or add the city.":"Couldn't estimate right now. You can still send your request and Carlos will work it out.";build()})
+ .catch(function(e){state.dist="";dOut.textContent=/nf:/.test(e.message)?"Couldn't find “"+e.message.slice(3)+"”. Pick an address from the suggestions or add the city.":"Couldn't estimate right now. You can still send your request and we will work it out.";build()})
  .then(function(){dBtn.disabled=false})}
 dBtn.addEventListener("click",calcDist);
 [F.pick,F.drop].forEach(function(el){el.addEventListener("input",function(){if(state.dist){state.dist="";dOut.textContent="Address changed. Pick from the suggestions or tap Estimate mileage."}})});
