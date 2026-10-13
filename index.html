@@ -11,8 +11,8 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="preload" as="image" href="/assets/hero-night.webp" fetchpriority="high">
-<link rel="preload" as="image" href="/assets/hero-sprinter.webp">
+<link rel="preload" as="image" href="/assets/hero-sprinter.webp" fetchpriority="high">
+<link rel="preload" as="image" href="/assets/hero-night.webp">
 <meta name="geo.region" content="US-CA">
 <meta name="geo.placename" content="Los Angeles">
 <meta property="og:type" content="website">
@@ -100,8 +100,8 @@ p{margin:0 0 1rem;max-width:62ch}
 .hero{position:relative;min-height:clamp(640px,96svh,1040px);display:grid;align-items:end;padding-block:7.5rem 3rem;isolation:isolate;overflow:hidden}
 .hero__img{position:absolute;inset:0;z-index:-3;background-size:cover;background-position:50% 84%;background-repeat:no-repeat;transform:translate3d(calc(var(--px,0)*-10px),calc(var(--py,0)*-6px),0) scale(1.02);transition:transform .5s ease-out}
 .hero__img--dusk{background-image:var(--img-dusk)}
-.hero__img--night{background-image:var(--img-night)}
-.hero__img--sprinter{background-image:url("/assets/hero-sprinter.webp");background-position:62% 70%;opacity:0;transition:opacity .9s ease,transform .5s ease-out}
+.hero__img--night{background-image:var(--img-night);opacity:0}
+.hero__img--sprinter{background-image:url("/assets/hero-sprinter.webp");background-position:62% 70%;opacity:1;transition:opacity .9s ease,transform .5s ease-out}
 .hero__img--night{transition:opacity .9s ease,transform .5s ease-out}
 .rides{display:grid;gap:.5rem}
 .ride-btn{display:flex;justify-content:space-between;align-items:center;gap:1rem;width:100%;min-height:3rem;padding:.55rem .9rem;border:1px solid var(--line2);border-radius:4px;background:transparent;cursor:pointer;text-align:left;font-family:var(--disp);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:1.1rem;transition:background .2s,border-color .2s,color .2s}
@@ -305,6 +305,8 @@ textarea{min-height:6rem;resize:vertical}
 .contact b{font-family:var(--disp);font-size:clamp(1.4rem,3vw,2rem);font-weight:600;letter-spacing:.03em;overflow-wrap:anywhere}
 .copy{min-height:2.25rem;padding:.2rem .8rem;border-radius:3px;border:1px solid var(--line2);background:transparent;cursor:pointer;font-size:.9rem}
 .copy:hover{border-color:var(--ink)}
+.dist{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem}
+.dist b{color:var(--accent);font-family:var(--disp);font-size:1.3rem;letter-spacing:.03em}
 a.copy{display:inline-flex;align-items:center;text-decoration:none}
 /* mobile action bar */
 .mbar{display:none}
@@ -348,7 +350,7 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
  <div class="wrap nav__in">
   <a class="brand" href="#top" aria-label="Clarity Ultimate Transportation, home"><span class="mk-flat" aria-hidden="true"></span><b>Clarity Ultimate<br>Transportation</b></a>
   <div class="nav__links">
-   <a href="#van">The van</a><a href="#party">Fleet</a><a href="#ride">Ride along</a><a href="#rates">Rates</a><a href="#book">Book</a>
+   <a href="#party">Party bus</a><a href="#van">The van</a><a href="#rates">Rates</a><a href="#book">Book</a>
   </div>
   <a class="btn btn--sm" href="#quote">Get a quote</a>
  </div>
@@ -363,19 +365,19 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
    <div class="mk mk--hero hero__mark" id="heroMark" role="img" aria-label="Clarity striped diamond logo"></div>
    <h1>Clarity Ultimate Transportation</h1>
    <div class="hero__slogan-wrap">
-    <p class="slogan disp" aria-live="polite" style="max-width:none"><span id="sDusk">Red carpet optional.</span><span id="sNight" style="opacity:0;transform:translateY(14px)">Bring the whole crew.</span></p>
+    <p class="slogan disp" aria-live="polite" style="max-width:none"><span id="sDusk" style="opacity:0">Red carpet optional.</span><span id="sNight">Bring the whole crew.</span></p>
    </div>
-   <p class="hero__p">Private chauffeur service across Los Angeles. A black Chevy Express conversion van for airport runs and small groups, and a Mercedes-Benz Sprinter party bus for the whole crew. Flat rates, no surge, no hidden fees.</p>
+   <p class="hero__p">Private chauffeur service across Los Angeles. A Mercedes-Benz Sprinter party bus for the whole crew, and a black Chevy Express conversion van for airport runs and small groups. Flat rates, no surge, no hidden fees.</p>
    <div class="hero__cta">
     <a class="btn" href="#quote">Get a flat-rate quote</a>
-    <a class="btn btn--ghost" href="#ride">Ride along</a>
+    <a class="btn btn--ghost" href="#party">See the fleet</a>
    </div>
   </div>
   <div class="hour">
    <div class="hour__row"><span>Pick your ride</span></div>
    <div class="rides" role="group" aria-label="Choose a vehicle">
-    <button class="ride-btn" data-r="0" aria-pressed="true">Conversion van <small>Chevy Express</small></button>
-    <button class="ride-btn" data-r="1" aria-pressed="false">Party bus <small>Mercedes Sprinter</small></button>
+    <button class="ride-btn" data-r="1" aria-pressed="true">Party bus <small>Mercedes Sprinter</small></button>
+    <button class="ride-btn" data-r="0" aria-pressed="false">Conversion van <small>Chevy Express</small></button>
    </div>
   </div>
  </div>
@@ -389,65 +391,6 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
   <li><svg class="ic" aria-hidden="true"><use href="#i-bottle"/></svg>Complimentary water</li>
   <li><svg class="ic" aria-hidden="true"><use href="#i-case"/></svg>Luggage assistance</li>
  </ul></div>
-</section>
-
-<section class="sec" id="van">
- <div class="wrap">
-  <div class="streaks" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i></div>
-  <div class="van__grid">
-   <figure class="van__fig">
-    <img loading="lazy" decoding="async" src="/assets/van.webp" alt="Black 2021 Chevy Express conversion van parked in downtown Los Angeles at night" width="1080" height="1085">
-    <button class="hot" style="left:65%;top:54%" data-t="High-top roof" data-d="A raised roof gives the cabin more room overhead than a standard van." aria-pressed="false" aria-label="High-top roof"></button>
-    <button class="hot" style="left:76%;top:64%" data-t="Tinted glass" data-d="Dark glass keeps the cabin private from the street." aria-pressed="false" aria-label="Tinted glass"></button>
-    <button class="hot" style="left:58%;top:80%" data-t="Limited SE" data-d="The conversion carries Limited SE badging on the side, with a running board below the sliding door." aria-pressed="false" aria-label="Limited SE badge and side step"></button>
-    <button class="hot" style="left:48%;top:87%" data-t="Black wheels" data-d="Black alloy wheels match the all-black paint." aria-pressed="false" aria-label="Black wheels"></button>
-   </figure>
-   <div>
-    <h2 class="disp">The van</h2>
-    <p class="lede">A black 2021 Chevy Express conversion van, set up for a private ride from a quick airport run to an all-day booking.</p>
-    <div class="hotnote" id="hotnote" aria-live="polite"><b>Take a closer look</b><span class="dim">Tap a dot on the photo.</span></div>
-    <dl class="specs">
-     <div><dt>Vehicle</dt><dd>2021 Chevy Express conversion van</dd></div>
-     <div><dt>Finish</dt><dd>Black, with black wheels</dd></div>
-     <div><dt>Seating</dt><dd>Quilted leather, captain&rsquo;s chairs and rear bench</dd></div>
-     <div><dt>Onboard</dt><dd>Wi-Fi, charging ports, climate control</dd></div>
-     <div><dt>Included</dt><dd>Complimentary water, luggage assistance</dd></div>
-    </dl>
-   </div>
-  </div>
-  <div class="amen">
-   <div><svg class="ic" aria-hidden="true"><use href="#i-wifi"/></svg><b>Wi-Fi</b><span>Stay online on the way to a meeting or a flight.</span></div>
-   <div><svg class="ic" aria-hidden="true"><use href="#i-plug"/></svg><b>Charging ports</b><span>Phones and laptops stay charged.</span></div>
-   <div><svg class="ic" aria-hidden="true"><use href="#i-snow"/></svg><b>Climate control</b><span>Set for the people in the van, not the driver.</span></div>
-   <div><svg class="ic" aria-hidden="true"><use href="#i-seat"/></svg><b>Leather seating</b><span>Quilted leather, with room to stretch out.</span></div>
-  </div>
- </div>
-</section>
-
-<section class="sec sec--alt" id="ride">
- <div class="wrap ride">
-  <div class="phone">
-   <video id="vid" playsinline muted loop preload="metadata" poster="/assets/ride-poster.jpg" aria-label="Walkthrough video of the black Chevy Express conversion van, outside and inside"><source src="/assets/ride-along.mp4" type="video/mp4"></video>
-   <div class="phone__ui">
-    <div class="phone__bar">
-     <button class="pbtn" id="vPlay" aria-label="Play or pause the video"><svg class="ic" aria-hidden="true"><use id="vPlayUse" href="#i-play"/></svg></button>
-     <div class="prog" aria-hidden="true"><i id="vProg"></i></div>
-    </div>
-   </div>
-  </div>
-  <div>
-   <h2 class="disp">Ride along</h2>
-   <p class="lede">Walk around the van and sit inside before you book. Jump to the part you care about.</p>
-   <div class="chips" role="group" aria-label="Video chapters">
-    <button class="chip" data-s="0" aria-pressed="true">Outside</button>
-    <button class="chip" data-s="9" aria-pressed="false">Cabin</button>
-    <button class="chip" data-s="17" aria-pressed="false">Rear bench</button>
-    <button class="chip" data-s="31" aria-pressed="false">Headliner</button>
-    <button class="chip" data-s="46" aria-pressed="false">Quilted seats</button>
-   </div>
-   
-  </div>
- </div>
 </section>
 
 <section class="sec" id="rates">
@@ -521,7 +464,7 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
 
 <section class="sec" id="party">
  <div class="wrap">
-  <div class="sec__head"><h2 class="disp">The fleet</h2><p class="lede">Two ways to ride. The Chevy Express conversion van for airport runs and small groups, and the Mercedes-Benz Sprinter party bus when the whole crew is coming.</p></div>
+  <div class="sec__head"><h2 class="disp">The fleet</h2><p class="lede">Two ways to ride. The Mercedes-Benz Sprinter party bus when the whole crew is coming, and the Chevy Express conversion van for airport runs and small groups.</p></div>
   <div class="party">
    <div class="phone"><video id="spVid" playsinline muted loop autoplay preload="metadata" poster="/assets/sprinter-poster.jpg" aria-label="Walkthrough of the Mercedes-Benz Sprinter party bus, outside and inside"><source src="/assets/sprinter.mp4" type="video/mp4"></video>
     <div class="phone__ui"><div class="phone__bar"><button class="pbtn" id="spPlay" aria-label="Play or pause the video"><svg class="ic" aria-hidden="true"><use id="spPlayUse" href="#i-pause"/></svg></button><div class="prog" aria-hidden="true"><i id="spProg"></i></div></div></div>
@@ -543,7 +486,49 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
  </div>
 </section>
 
-<section class="sec sec--alt" id="for">
+<section class="sec sec--alt" id="van">
+ <div class="wrap">
+  <div class="party">
+   <div class="phone">
+   <video id="vid" playsinline muted loop preload="metadata" poster="/assets/ride-poster.jpg" aria-label="Walkthrough video of the black Chevy Express conversion van, outside and inside"><source src="/assets/ride-along.mp4" type="video/mp4"></video>
+   <div class="phone__ui">
+    <div class="phone__bar">
+     <button class="pbtn" id="vPlay" aria-label="Play or pause the video"><svg class="ic" aria-hidden="true"><use id="vPlayUse" href="#i-play"/></svg></button>
+     <div class="prog" aria-hidden="true"><i id="vProg"></i></div>
+    </div>
+   </div>
+  </div>
+   <div>
+    <span class="lab">Chevy Express</span>
+    <h3 style="font-size:clamp(2rem,4vw,3rem);margin:.3rem 0 1rem">Conversion van</h3>
+    <p class="lede">A black 2021 Chevy Express conversion van, set up for a private ride from a quick airport run to an all-day booking.</p>
+    <div class="chips" role="group" aria-label="Video chapters">
+    <button class="chip" data-s="0" aria-pressed="true">Outside</button>
+    <button class="chip" data-s="9" aria-pressed="false">Cabin</button>
+    <button class="chip" data-s="17" aria-pressed="false">Rear bench</button>
+    <button class="chip" data-s="31" aria-pressed="false">Headliner</button>
+    <button class="chip" data-s="46" aria-pressed="false">Quilted seats</button>
+   </div>
+    <dl class="specs">
+     <div><dt>Vehicle</dt><dd>2021 Chevy Express conversion van</dd></div>
+     <div><dt>Finish</dt><dd>Black, with black wheels</dd></div>
+     <div><dt>Seating</dt><dd>Quilted leather, captain&rsquo;s chairs and rear bench</dd></div>
+     <div><dt>Onboard</dt><dd>Wi-Fi, charging ports, climate control</dd></div>
+     <div><dt>Included</dt><dd>Complimentary water, luggage assistance</dd></div>
+    </dl>
+    <a class="btn" href="#quote" style="margin-top:1.6rem">See airport rates</a>
+   </div>
+  </div>
+  <div class="amen">
+   <div><svg class="ic" aria-hidden="true"><use href="#i-wifi"/></svg><b>Wi-Fi</b><span>Stay online on the way to a meeting or a flight.</span></div>
+   <div><svg class="ic" aria-hidden="true"><use href="#i-plug"/></svg><b>Charging ports</b><span>Phones and laptops stay charged.</span></div>
+   <div><svg class="ic" aria-hidden="true"><use href="#i-snow"/></svg><b>Climate control</b><span>Set for the people in the van, not the driver.</span></div>
+   <div><svg class="ic" aria-hidden="true"><use href="#i-seat"/></svg><b>Leather seating</b><span>Quilted leather, with room to stretch out.</span></div>
+  </div>
+ </div>
+</section>
+
+<section class="sec" id="for">
  <div class="wrap">
   <div class="sec__head"><h2 class="disp">Perfect for</h2><p class="lede">One van, one chauffeur, your schedule.</p></div>
   <div class="occ">
@@ -575,7 +560,7 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
 
 <section class="sec sec--alt" id="book">
  <div class="wrap">
-  <div class="sec__head"><h2 class="disp">Plan your trip</h2><p class="lede">Rather not call? Fill this in and tap Email my request. Your email app opens with the trip details ready to send, and we will confirm your ride.</p></div>
+  <div class="sec__head"><h2 class="disp">Plan your trip</h2><p class="lede">Rather not call? Enter your pickup and drop-off, check the distance, then tap Text Carlos for a quote. Your messages app opens with the trip details ready to send, and Carlos texts you back a price.</p></div>
   <div class="book">
    <form class="form" id="form" autocomplete="on" novalidate>
     <div class="fld"><label class="lab" for="f-name">Name</label><input type="text" id="f-name" name="name" autocomplete="name"></div>
@@ -586,6 +571,7 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
     <div class="fld"><label class="lab" for="f-time">Pickup time</label><input type="time" id="f-time" name="time"></div>
     <div class="fld full"><label class="lab" for="f-pick">Pickup location</label><input type="text" id="f-pick" name="pickup" placeholder="Address, hotel or airport terminal"></div>
     <div class="fld full"><label class="lab" for="f-drop">Drop-off location</label><input type="text" id="f-drop" name="dropoff" placeholder="Address, hotel or airport terminal"></div>
+    <div class="fld full dist"><button class="btn btn--ghost btn--sm" type="button" id="distBtn">Calculate distance</button><output id="distOut" class="dim" aria-live="polite">Enter pickup and drop-off, then tap to see the miles and drive time.</output></div>
     <div class="fld"><label class="lab" for="f-pax">Passengers</label><input type="number" id="f-pax" name="pax" min="1" max="20" inputmode="numeric"></div>
     <div class="fld"><label class="lab" for="f-flight">Flight number</label><input type="text" id="f-flight" name="flight" placeholder="So we can track it"></div>
     <div class="fld full"><label class="lab" for="f-notes">Notes</label><textarea id="f-notes" name="notes" placeholder="Luggage, car seats, stops along the way"></textarea></div>
@@ -594,8 +580,8 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
     <label class="lab" for="sumText">Your request</label>
     <textarea id="sumText" readonly></textarea>
     <div class="sum__row">
-     <a class="btn" id="mailReq" href="mailto:info@cutransportationla.com">Email my request</a>
-     <a class="btn btn--ghost" id="smsReq" href="sms:+12134215675" data-sms>Text it</a>
+     <a class="btn" id="smsReq" href="sms:+12134215675" data-sms>Text Carlos for a quote</a>
+     <a class="btn btn--ghost" id="mailReq" href="mailto:info@cutransportationla.com">Email it</a>
      <button class="btn btn--ghost" id="copyReq" type="button">Copy</button>
     </div>
     <p class="note" style="margin-top:1rem">Text or call <a href="tel:+12134215675" data-tel><b data-phone>(213) 421-5675</b></a>, or email <a href="mailto:info@cutransportationla.com"><b>info@cutransportationla.com</b></a>. Nothing is sent until you send it.</p>
@@ -681,9 +667,9 @@ var hero=$("#top"),spL=$("#imgSp"),vanL=$("#imgVan"),sD=$("#sDusk"),sN=$("#sNigh
 function setRide(i){cur=i;var n=i;spL.style.opacity=n;vanL.style.opacity=1-n;
  sD.style.opacity=1-n;sD.style.transform="translateY("+(-14*n)+"px)";
  sN.style.opacity=n;sN.style.transform="translateY("+(14*(1-n))+"px)";
- rb.forEach(function(b,k){b.setAttribute("aria-pressed",k===i?"true":"false")});}
-rb.forEach(function(b,k){b.addEventListener("click",function(){auto=false;setRide(k)})});
-setRide(0);
+ rb.forEach(function(b){b.setAttribute("aria-pressed",+b.dataset.r===i?"true":"false")});}
+rb.forEach(function(b){b.addEventListener("click",function(){auto=false;setRide(+b.dataset.r)})});
+setRide(1);
 if(!reduce){setInterval(function(){if(auto&&!document.hidden)setRide(1-cur)},5500)}
 if(!reduce&&matchMedia("(pointer:fine)").matches){
  hero.addEventListener("pointermove",function(e){var r=hero.getBoundingClientRect();hero.style.setProperty("--px",((e.clientX-r.left)/r.width-.5).toFixed(3));hero.style.setProperty("--py",((e.clientY-r.top)/r.height-.5).toFixed(3));});
@@ -802,11 +788,11 @@ stamps.forEach(function(s){s.addEventListener("click",function(){s.setAttribute(
 
 /* booking summary */
 function build(){
- var L=["Clarity Ultimate Transportation booking request",""];
+ var L=["Hi Carlos, I would like a quote from Clarity Ultimate Transportation.",""];
  function add(k,v){if(v)L.push(k+": "+v)}
  add("Name",F.name.value.trim());add("Phone",F.phone.value.trim());add("Service",F.service.value);
  if(F.date.value||F.time.value)add("Pickup",[F.date.value,F.time.value].filter(Boolean).join(" at "));
- add("From",F.pick.value.trim());add("To",F.drop.value.trim());add("Passengers",F.pax.value);add("Flight",F.flight.value.trim());
+ add("From",F.pick.value.trim());add("To",F.drop.value.trim());if(state.dist)L.push("Distance: "+state.dist);add("Passengers",F.pax.value);add("Flight",F.flight.value.trim());
  if(F.service.value==="Hourly hire"&&state.hours)L.push("Hours: "+state.hours+" ($"+(state.hours*150).toLocaleString("en-US")+" at $150 per hour)");
  else if(F.service.value==="Disneyland"&&state.mode==="dis")L.push("Quote: Disneyland round trip $375");
  else if((F.service.value==="Airport transfer"||F.service.value==="Disneyland")&&state.mode==="route")L.push("Quote: "+state.label+", "+fmt(state.price)+" one way");
@@ -816,6 +802,24 @@ function build(){
  var sm=$("#smsReq");if(sm){sm.href="sms:"+PHONE_E164+(/iPhone|iPad|Mac/.test(navigator.userAgent)?"&":"?")+"body="+encodeURIComponent(t)}
  $("#mailReq").href="mailto:info@cutransportationla.com?subject="+encodeURIComponent("Ride request"+(F.name.value.trim()?" from "+F.name.value.trim():"")+(F.date.value?" for "+F.date.value:""))+"&body="+encodeURIComponent(t);
 }
+/* distance: OpenStreetMap geocoding + OSRM driving route */
+var dOut=$("#distOut"),dBtn=$("#distBtn");
+function geo(q){var u="https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=us&viewbox=-119.5,35,-116,32.5&q="+encodeURIComponent(q);
+ return fetch(u,{headers:{"Accept":"application/json"}}).then(function(r){return r.json()}).then(function(j){if(!j.length)throw new Error("nf:"+q);return [+j[0].lon,+j[0].lat]})}
+function calcDist(){var a=F.pick.value.trim(),b=F.drop.value.trim();
+ if(!a||!b){dOut.textContent="Enter both a pickup and a drop-off first.";return}
+ dOut.textContent="Calculating…";dBtn.disabled=true;
+ geo(a).then(function(p){return new Promise(function(res){setTimeout(res,1100)}).then(function(){return geo(b)}).then(function(q){return [p,q]})})
+ .then(function(pq){return fetch("https://router.project-osrm.org/route/v1/driving/"+pq[0].join(",")+";"+pq[1].join(",")+"?overview=false").then(function(r){return r.json()})})
+ .then(function(j){if(!j.routes||!j.routes.length)throw new Error("route");var mi=j.routes[0].distance/1609.34,mn=Math.round(j.routes[0].duration/60);
+  var t=mn>=60?Math.floor(mn/60)+" hr "+(mn%60)+" min":mn+" min";
+  state.dist=mi.toFixed(1)+" miles, about "+t+" drive";
+  dOut.innerHTML="";var bb=document.createElement("b");bb.textContent=mi.toFixed(1)+" mi";dOut.appendChild(bb);dOut.appendChild(document.createTextNode(" · about "+t+" without traffic. Added to your request."));build()})
+ .catch(function(e){state.dist="";dOut.textContent=/nf:/.test(e.message)?"Couldn't find “"+e.message.slice(3)+"”. Try a fuller address or a place name with the city.":"Couldn't calculate right now. You can still text Carlos and he'll work it out.";build()})
+ .then(function(){dBtn.disabled=false})}
+dBtn.addEventListener("click",calcDist);
+[F.pick,F.drop].forEach(function(el){el.addEventListener("input",function(){if(state.dist){state.dist="";dOut.textContent="Address changed. Tap to recalculate."}})});
+
 Object.keys(F).forEach(function(k){F[k].addEventListener("input",build);F[k].addEventListener("change",build)});
 $("#form").addEventListener("submit",function(e){e.preventDefault()});
 build();
