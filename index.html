@@ -11,7 +11,8 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="preload" as="image" href="/assets/hero-dusk.webp" fetchpriority="high">
+<link rel="preload" as="image" href="/assets/hero-night.webp" fetchpriority="high">
+<link rel="preload" as="image" href="/assets/hero-sprinter.webp">
 <meta name="geo.region" content="US-CA">
 <meta name="geo.placename" content="Los Angeles">
 <meta property="og:type" content="website">
@@ -99,7 +100,14 @@ p{margin:0 0 1rem;max-width:62ch}
 .hero{position:relative;min-height:clamp(640px,96svh,1040px);display:grid;align-items:end;padding-block:7.5rem 3rem;isolation:isolate;overflow:hidden}
 .hero__img{position:absolute;inset:0;z-index:-3;background-size:cover;background-position:50% 84%;background-repeat:no-repeat;transform:translate3d(calc(var(--px,0)*-10px),calc(var(--py,0)*-6px),0) scale(1.02);transition:transform .5s ease-out}
 .hero__img--dusk{background-image:var(--img-dusk)}
-.hero__img--night{background-image:var(--img-night);opacity:0}
+.hero__img--night{background-image:var(--img-night)}
+.hero__img--sprinter{background-image:url("/assets/hero-sprinter.webp");background-position:62% 70%;opacity:0;transition:opacity .9s ease,transform .5s ease-out}
+.hero__img--night{transition:opacity .9s ease,transform .5s ease-out}
+.rides{display:grid;gap:.5rem}
+.ride-btn{display:flex;justify-content:space-between;align-items:center;gap:1rem;width:100%;min-height:3rem;padding:.55rem .9rem;border:1px solid var(--line2);border-radius:4px;background:transparent;cursor:pointer;text-align:left;font-family:var(--disp);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:1.1rem;transition:background .2s,border-color .2s,color .2s}
+.ride-btn small{font-family:var(--body);text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim);font-size:.85rem}
+.ride-btn[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.ride-btn[aria-pressed=true] small{color:var(--on-accent)}
 .hero__shade{position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,rgba(6,9,10,.55) 0,rgba(6,9,10,0) 22%,rgba(6,9,10,0) 48%,rgba(6,9,10,.86) 84%,var(--bg) 100%),linear-gradient(90deg,rgba(6,9,10,.72),rgba(6,9,10,0) 62%)}
 .hero__body{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2rem;align-items:end}
 .hero__mark{width:clamp(150px,18vw,230px);margin-bottom:1rem}
@@ -305,6 +313,7 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
 @media(max-width:860px){.foot__grid{grid-template-columns:1fr}}
 
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.hero h1,.hero__p,.hero__cta,.hour,.hero__slogan-wrap{opacity:1}}
+@media(max-width:820px){.hero__img--sprinter{background-position:62% 75%}}
 </style>
 
 </head>
@@ -346,26 +355,28 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
 </nav>
 
 <header class="hero" id="top">
- <div class="hero__img hero__img--dusk" id="imgDusk"></div>
- <div class="hero__img hero__img--night" id="imgNight"></div>
+ <div class="hero__img hero__img--night" id="imgVan"></div>
+ <div class="hero__img hero__img--sprinter" id="imgSp"></div>
  <div class="hero__shade"></div>
  <div class="wrap hero__body">
   <div class="hero__copy">
    <div class="mk mk--hero hero__mark" id="heroMark" role="img" aria-label="Clarity striped diamond logo"></div>
    <h1>Clarity Ultimate Transportation</h1>
    <div class="hero__slogan-wrap">
-    <p class="slogan disp" aria-live="polite" style="max-width:none"><span id="sDusk">Arrive like a star.</span><span id="sNight" style="opacity:0;transform:translateY(14px)">Red carpet optional.</span></p>
+    <p class="slogan disp" aria-live="polite" style="max-width:none"><span id="sDusk">Red carpet optional.</span><span id="sNight" style="opacity:0;transform:translateY(14px)">Bring the whole crew.</span></p>
    </div>
-   <p class="hero__p">Private chauffeur service across Los Angeles in a black Chevy Express conversion van. Flat rates, no surge, no hidden fees.</p>
+   <p class="hero__p">Private chauffeur service across Los Angeles. A black Chevy Express conversion van for airport runs and small groups, and a Mercedes-Benz Sprinter party bus for the whole crew. Flat rates, no surge, no hidden fees.</p>
    <div class="hero__cta">
     <a class="btn" href="#quote">Get a flat-rate quote</a>
     <a class="btn btn--ghost" href="#ride">Ride along</a>
    </div>
   </div>
   <div class="hour">
-   <div class="hour__row"><label for="hour">Set the hour</label><output id="hourOut" for="hour">Golden hour</output></div>
-   <input type="range" id="hour" min="0" max="100" value="0" aria-label="Time of day, from dusk to night">
-   <div class="hour__ends"><span><svg class="ic" aria-hidden="true"><use href="#i-sun"/></svg>Dusk</span><span>Night<svg class="ic" aria-hidden="true"><use href="#i-moon"/></svg></span></div>
+   <div class="hour__row"><span>Pick your ride</span></div>
+   <div class="rides" role="group" aria-label="Choose a vehicle">
+    <button class="ride-btn" data-r="0" aria-pressed="true">Conversion van <small>Chevy Express</small></button>
+    <button class="ride-btn" data-r="1" aria-pressed="false">Party bus <small>Mercedes Sprinter</small></button>
+   </div>
   </div>
  </div>
 </header>
@@ -665,16 +676,15 @@ $$(".mk").forEach(function(el){
 var nav=$("#nav");function onScroll(){nav.classList.toggle("is-solid",window.scrollY>40)}
 addEventListener("scroll",onScroll,{passive:true});onScroll();
 
-/* hero: hour slider + pointer parallax */
-var hour=$("#hour"),nightL=$("#imgNight"),sD=$("#sDusk"),sN=$("#sNight"),hOut=$("#hourOut"),hero=$("#top");
-function setHour(){
- var t=hour.value/100;nightL.style.opacity=t;
- var n=Math.min(1,Math.max(0,(t-.35)/.3));
+/* hero: van / sprinter switcher + pointer parallax */
+var hero=$("#top"),spL=$("#imgSp"),vanL=$("#imgVan"),sD=$("#sDusk"),sN=$("#sNight"),rb=$$(".ride-btn"),cur=0,auto=true;
+function setRide(i){cur=i;var n=i;spL.style.opacity=n;vanL.style.opacity=1-n;
  sD.style.opacity=1-n;sD.style.transform="translateY("+(-14*n)+"px)";
  sN.style.opacity=n;sN.style.transform="translateY("+(14*(1-n))+"px)";
- hOut.textContent=t<.2?"Golden hour":t<.5?"Blue hour":t<.8?"After dark":"Midnight";
-}
-hour.addEventListener("input",setHour);setHour();
+ rb.forEach(function(b,k){b.setAttribute("aria-pressed",k===i?"true":"false")});}
+rb.forEach(function(b,k){b.addEventListener("click",function(){auto=false;setRide(k)})});
+setRide(0);
+if(!reduce){setInterval(function(){if(auto&&!document.hidden)setRide(1-cur)},5500)}
 if(!reduce&&matchMedia("(pointer:fine)").matches){
  hero.addEventListener("pointermove",function(e){var r=hero.getBoundingClientRect();hero.style.setProperty("--px",((e.clientX-r.left)/r.width-.5).toFixed(3));hero.style.setProperty("--py",((e.clientY-r.top)/r.height-.5).toFixed(3));});
 }
