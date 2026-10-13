@@ -297,7 +297,7 @@ textarea{min-height:6rem;resize:vertical}
 .ac__list li{padding:.6rem .9rem;cursor:pointer;line-height:1.3}
 .ac__list li small{display:block;color:var(--dim);font-size:.82rem}
 .ac__list li[aria-selected=true],.ac__list li:hover{background:rgba(109,193,198,.15)}
-.ac__me{justify-self:start;background:none;border:0;padding:.2rem 0;color:var(--accent);cursor:pointer;font-size:.92rem;text-decoration:underline;text-underline-offset:3px}
+.ac__me{justify-self:start;margin-top:.3rem}
 .dist{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem}
 .dist b{color:var(--accent);font-family:var(--disp);font-size:1.3rem;letter-spacing:.03em}
 a.copy{display:inline-flex;align-items:center;text-decoration:none}
@@ -352,9 +352,9 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
  <div class="wrap nav__in">
   <a class="brand" href="#top" aria-label="Clarity Ultimate Transportation, home"><span class="mk-flat" aria-hidden="true"></span><b>Clarity Ultimate<br>Transportation</b></a>
   <div class="nav__links">
-   <a href="#party">Sprinter</a><a href="#van">The van</a><a href="#rates">Rates</a><a href="#book">Book</a>
+   <a href="#party">Sprinter</a><a href="#van">The van</a><a href="#rates">Rates</a>
   </div>
-  <a class="btn btn--sm" href="#quote">Get a quote</a>
+  <a class="btn btn--sm" href="#book">Get a quote</a>
  </div>
 </nav>
 
@@ -372,7 +372,7 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
    </div>
    <p class="hero__p">Private chauffeur service across Los Angeles. Two luxury rides: a 12-passenger custom Mercedes-Benz Sprinter and a 7-passenger custom Explorer conversion van. Flat rates, no surge, no hidden fees.</p>
    <div class="hero__cta">
-    <a class="btn" href="#quote">Get a flat-rate quote</a>
+    <a class="btn" href="#book">Get a custom quote</a>
     <a class="btn btn--ghost" href="#party">See the fleet</a>
    </div>
   </div>
@@ -396,71 +396,34 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
  </ul></div>
 </section>
 
-<section class="sec" id="rates">
+<section class="sec sec--alt" id="book">
  <div class="wrap">
-  <div class="sec__head">
-   <h2 class="disp">Flat rates, posted up front</h2>
-   <p class="lede">Gratuity, airport fees, parking and tolls are included in every rate. No surge pricing and no hidden fees.</p>
-  </div>
-  <div class="tabs" role="tablist" aria-label="Rate type">
-   <button class="tab" role="tab" id="t-air" aria-controls="p-air" aria-selected="true">Airport transfers</button>
-   <button class="tab" role="tab" id="t-hr" aria-controls="p-hr" aria-selected="false">By the hour</button>
-   <button class="tab" role="tab" id="t-dis" aria-controls="p-dis" aria-selected="false">Disneyland</button>
-  </div>
-
-  <div class="panel" id="p-air" role="tabpanel" aria-labelledby="t-air">
-   <div class="est" id="quote">
-    <div class="est__in">
-     <div class="fld"><span id="lbAir">Airport</span>
-      <div class="seg" id="airSeg" role="group" aria-labelledby="lbAir"></div></div>
-     <div class="fld"><label for="dest" class="lab">Destination</label><select id="dest"></select></div>
-     <div class="fld"><span id="lbDir">Direction</span>
-      <div class="seg" id="dirSeg" role="group" aria-labelledby="lbDir"><button data-v="from" aria-pressed="true">From the airport</button><button data-v="to" aria-pressed="false">To the airport</button></div></div>
+  <div class="sec__head"><h2 class="disp">Get a custom quote</h2><p class="lede">Enter your pickup and drop-off addresses, including your own home or office. We estimate the mileage, then send the request to Carlos by text or email and he replies with a price.</p></div>
+  <div class="book">
+   <form class="form" id="form" autocomplete="on" novalidate>
+    <div class="fld full ac"><label class="lab" for="f-pick">Pickup address</label><input type="text" id="f-pick" name="pickup" placeholder="Your home, hotel, office or airport" autocomplete="street-address" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ac-pick"><ul class="ac__list" id="ac-pick" role="listbox" hidden></ul><button type="button" class="btn btn--ghost btn--sm ac__me" id="useMe">&#x2316; Use my current location</button></div>
+    <div class="fld full ac"><label class="lab" for="f-drop">Drop-off address</label><input type="text" id="f-drop" name="dropoff" placeholder="Where are you headed?" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ac-drop"><ul class="ac__list" id="ac-drop" role="listbox" hidden></ul></div>
+    <div class="fld full dist"><button class="btn btn--ghost btn--sm" type="button" id="distBtn">Estimate mileage</button><output id="distOut" class="dim" aria-live="polite">Pick both addresses and the estimated miles and drive time appear here.</output></div>
+    <div class="fld"><label class="lab" for="f-name">Name</label><input type="text" id="f-name" name="name" autocomplete="name"></div>
+    <div class="fld"><label class="lab" for="f-phone">Phone</label><input type="tel" id="f-phone" name="phone" autocomplete="tel"></div>
+    <div class="fld full"><label class="lab" for="f-service">Service</label>
+     <select id="f-service" name="service"><option>Airport transfer</option><option>Hourly hire</option><option>Disneyland</option><option>Executive Sprinter</option><option>Event or special occasion</option><option>Something else</option></select></div>
+    <div class="fld"><label class="lab" for="f-date">Date</label><input type="date" id="f-date" name="date"></div>
+    <div class="fld"><label class="lab" for="f-time">Pickup time</label><input type="time" id="f-time" name="time"></div>
+    <div class="fld"><label class="lab" for="f-pax">Passengers</label><input type="number" id="f-pax" name="pax" min="1" max="20" inputmode="numeric"></div>
+    <div class="fld"><label class="lab" for="f-flight">Flight number</label><input type="text" id="f-flight" name="flight" placeholder="So we can track it"></div>
+    <div class="fld full"><label class="lab" for="f-notes">Notes</label><textarea id="f-notes" name="notes" placeholder="Luggage, car seats, stops along the way"></textarea></div>
+   </form>
+   <div class="sum">
+    <label class="lab" for="sumText">Your request</label>
+    <textarea id="sumText" readonly></textarea>
+    <div class="sum__row">
+     <a class="btn" id="smsReq" href="sms:+12137700389" data-sms>Text Carlos for a quote</a>
+     <a class="btn btn--ghost" id="mailReq" href="mailto:info@cutransportationla.com">Email Carlos</a>
+     <button class="btn btn--ghost" id="copyReq" type="button">Copy</button>
     </div>
-    <div class="est__out">
-     <div class="est__route" id="estRoute">LAX to Downtown Los Angeles</div>
-     <div class="price" id="estPrice" aria-live="polite">$150</div>
-     <p id="estNote">One way, flat rate. Gratuity, airport fees, parking and tolls included.</p>
-     <button class="btn" id="useQuote">Use this in my request</button>
-    </div>
+    <p class="note" style="margin-top:1rem">Text or call <a href="tel:+12137700389" data-tel><b data-phone>(213) 770-0389</b></a>, or email <a href="mailto:info@cutransportationla.com"><b>info@cutransportationla.com</b></a>. Nothing is sent until you send it.</p>
    </div>
-   <div class="routes">
-    <h3>All airport routes</h3>
-    <label class="sr" for="rfilter">Filter destinations</label>
-    <input type="text" id="rfilter" placeholder="Filter by destination, like Malibu" autocomplete="off">
-    <div id="rgroups"></div>
-    <p class="note">&ldquo;From&rdquo; prices start at that amount. Give us the exact address for a final quote.</p>
-   </div>
-  </div>
-
-  <div class="panel" id="p-hr" role="tabpanel" aria-labelledby="t-hr" hidden>
-   <div class="hourly">
-    <div>
-     <div class="fld"><label for="hrs" class="lab">How long do you need the van?</label>
-      <input type="range" id="hrs" min="3" max="12" value="4" step="1"></div>
-     <div class="hrs"><b id="hrsN">4</b><span class="lab">hours</span></div>
-     <div class="bar" id="hrsBar" aria-hidden="true"></div>
-     <div class="price" id="hrsPrice" aria-live="polite">$600</div>
-     <p class="note">$150 an hour with a 3 hour minimum. Each added hour is $150.</p>
-     <button class="btn" id="useHourly">Use this in my request</button>
-    </div>
-    <div>
-     <ul class="hl">
-      <li>Professional chauffeur</li><li>Private, non-shared vehicle</li><li>Flight tracking</li><li>Luggage assistance</li><li>Complimentary bottled water</li><li>Clean luxury conversion van</li><li>No surge pricing, no rideshare waiting</li>
-     </ul>
-     <div style="margin-top:1.5rem" id="hrsTable"></div>
-    </div>
-   </div>
-  </div>
-
-  <div class="panel" id="p-dis" role="tabpanel" aria-labelledby="t-dis" hidden>
-   <div class="dis">
-    <div><span class="lab">LAX to Disneyland</span><div class="price">$200</div><small>One way</small></div>
-    <div><span class="lab">Disneyland to LAX</span><div class="price">$200</div><small>One way</small></div>
-    <div class="best"><span class="lab" style="color:var(--ink)">Round trip</span><div class="price">$375</div><small style="color:rgba(241,245,245,.8)">Save $25 over two one-way rides</small></div>
-   </div>
-   <p class="note" style="margin-top:1rem">Coming from another airport? Burbank $225, Long Beach $150, Santa Ana $125, Ontario $225 to Anaheim / Disneyland.</p>
-   <button class="btn" id="useDis" style="margin-top:.5rem">Use this in my request</button>
   </div>
  </div>
 </section>
@@ -540,7 +503,76 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
  </div>
 </section>
 
-<section class="sec" id="for">
+<section class="sec" id="rates">
+ <div class="wrap">
+  <div class="sec__head">
+   <h2 class="disp">Flat rates, posted up front</h2>
+   <p class="lede">Gratuity, airport fees, parking and tolls are included in every rate. No surge pricing and no hidden fees.</p>
+  </div>
+  <div class="tabs" role="tablist" aria-label="Rate type">
+   <button class="tab" role="tab" id="t-air" aria-controls="p-air" aria-selected="true">Airport transfers</button>
+   <button class="tab" role="tab" id="t-hr" aria-controls="p-hr" aria-selected="false">By the hour</button>
+   <button class="tab" role="tab" id="t-dis" aria-controls="p-dis" aria-selected="false">Disneyland</button>
+  </div>
+
+  <div class="panel" id="p-air" role="tabpanel" aria-labelledby="t-air">
+   <div class="est" id="quote">
+    <div class="est__in">
+     <div class="fld"><span id="lbAir">Airport</span>
+      <div class="seg" id="airSeg" role="group" aria-labelledby="lbAir"></div></div>
+     <div class="fld"><label for="dest" class="lab">Destination</label><select id="dest"></select></div>
+     <div class="fld"><span id="lbDir">Direction</span>
+      <div class="seg" id="dirSeg" role="group" aria-labelledby="lbDir"><button data-v="from" aria-pressed="true">From the airport</button><button data-v="to" aria-pressed="false">To the airport</button></div></div>
+    </div>
+    <div class="est__out">
+     <div class="est__route" id="estRoute">LAX to Downtown Los Angeles</div>
+     <div class="price" id="estPrice" aria-live="polite">$150</div>
+     <p id="estNote">One way, flat rate. Gratuity, airport fees, parking and tolls included.</p>
+     <button class="btn" id="useQuote">Use this in my request</button>
+    </div>
+   </div>
+   <div class="routes">
+    <h3>All airport routes</h3>
+    <label class="sr" for="rfilter">Filter destinations</label>
+    <input type="text" id="rfilter" placeholder="Filter by destination, like Malibu" autocomplete="off">
+    <div id="rgroups"></div>
+    <p class="note">&ldquo;From&rdquo; prices start at that amount. Give us the exact address for a final quote.</p>
+   </div>
+  </div>
+
+  <div class="panel" id="p-hr" role="tabpanel" aria-labelledby="t-hr" hidden>
+   <div class="hourly">
+    <div>
+     <div class="fld"><label for="hrs" class="lab">How long do you need the van?</label>
+      <input type="range" id="hrs" min="3" max="12" value="4" step="1"></div>
+     <div class="hrs"><b id="hrsN">4</b><span class="lab">hours</span></div>
+     <div class="bar" id="hrsBar" aria-hidden="true"></div>
+     <div class="price" id="hrsPrice" aria-live="polite">$600</div>
+     <p class="note">$150 an hour with a 3 hour minimum. Each added hour is $150.</p>
+     <button class="btn" id="useHourly">Use this in my request</button>
+    </div>
+    <div>
+     <ul class="hl">
+      <li>Professional chauffeur</li><li>Private, non-shared vehicle</li><li>Flight tracking</li><li>Luggage assistance</li><li>Complimentary bottled water</li><li>Clean luxury conversion van</li><li>No surge pricing, no rideshare waiting</li>
+     </ul>
+     <div style="margin-top:1.5rem" id="hrsTable"></div>
+    </div>
+   </div>
+  </div>
+
+  <div class="panel" id="p-dis" role="tabpanel" aria-labelledby="t-dis" hidden>
+   <div class="dis">
+    <div><span class="lab">LAX to Disneyland</span><div class="price">$200</div><small>One way</small></div>
+    <div><span class="lab">Disneyland to LAX</span><div class="price">$200</div><small>One way</small></div>
+    <div class="best"><span class="lab" style="color:var(--ink)">Round trip</span><div class="price">$375</div><small style="color:rgba(241,245,245,.8)">Save $25 over two one-way rides</small></div>
+   </div>
+   <p class="note" style="margin-top:1rem">Coming from another airport? Burbank $225, Long Beach $150, Santa Ana $125, Ontario $225 to Anaheim / Disneyland.</p>
+   <button class="btn" id="useDis" style="margin-top:.5rem">Use this in my request</button>
+  </div>
+ </div>
+</section>
+
+<section class="sec sec--alt" id="for">
  <div class="wrap">
   <div class="sec__head"><h2 class="disp">Perfect for</h2><p class="lede">One van, one chauffeur, your schedule.</p></div>
   <div class="occ">
@@ -554,37 +586,6 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
  </div>
 </section>
 
-<section class="sec sec--alt" id="book">
- <div class="wrap">
-  <div class="sec__head"><h2 class="disp">Plan your trip</h2><p class="lede">Enter your pickup and drop-off addresses, including your own home or office. We estimate the mileage, then send the request to Carlos by text or email and he replies with a price.</p></div>
-  <div class="book">
-   <form class="form" id="form" autocomplete="on" novalidate>
-    <div class="fld"><label class="lab" for="f-name">Name</label><input type="text" id="f-name" name="name" autocomplete="name"></div>
-    <div class="fld"><label class="lab" for="f-phone">Phone</label><input type="tel" id="f-phone" name="phone" autocomplete="tel"></div>
-    <div class="fld full"><label class="lab" for="f-service">Service</label>
-     <select id="f-service" name="service"><option>Airport transfer</option><option>Hourly hire</option><option>Disneyland</option><option>Executive Sprinter</option><option>Event or special occasion</option><option>Something else</option></select></div>
-    <div class="fld"><label class="lab" for="f-date">Date</label><input type="date" id="f-date" name="date"></div>
-    <div class="fld"><label class="lab" for="f-time">Pickup time</label><input type="time" id="f-time" name="time"></div>
-    <div class="fld full ac"><label class="lab" for="f-pick">Pickup address</label><input type="text" id="f-pick" name="pickup" placeholder="Your home, hotel, office or airport" autocomplete="street-address" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ac-pick"><ul class="ac__list" id="ac-pick" role="listbox" hidden></ul><button type="button" class="ac__me" id="useMe">Use my current location</button></div>
-    <div class="fld full ac"><label class="lab" for="f-drop">Drop-off address</label><input type="text" id="f-drop" name="dropoff" placeholder="Where are you headed?" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ac-drop"><ul class="ac__list" id="ac-drop" role="listbox" hidden></ul></div>
-    <div class="fld full dist"><button class="btn btn--ghost btn--sm" type="button" id="distBtn">Estimate mileage</button><output id="distOut" class="dim" aria-live="polite">Pick both addresses and the estimated miles and drive time appear here.</output></div>
-    <div class="fld"><label class="lab" for="f-pax">Passengers</label><input type="number" id="f-pax" name="pax" min="1" max="20" inputmode="numeric"></div>
-    <div class="fld"><label class="lab" for="f-flight">Flight number</label><input type="text" id="f-flight" name="flight" placeholder="So we can track it"></div>
-    <div class="fld full"><label class="lab" for="f-notes">Notes</label><textarea id="f-notes" name="notes" placeholder="Luggage, car seats, stops along the way"></textarea></div>
-   </form>
-   <div class="sum">
-    <label class="lab" for="sumText">Your request</label>
-    <textarea id="sumText" readonly></textarea>
-    <div class="sum__row">
-     <a class="btn" id="smsReq" href="sms:+12137700389" data-sms>Text Carlos for a quote</a>
-     <a class="btn btn--ghost" id="mailReq" href="mailto:info@cutransportationla.com">Email Carlos</a>
-     <button class="btn btn--ghost" id="copyReq" type="button">Copy</button>
-    </div>
-    <p class="note" style="margin-top:1rem">Text or call <a href="tel:+12137700389" data-tel><b data-phone>(213) 770-0389</b></a>, or email <a href="mailto:info@cutransportationla.com"><b>info@cutransportationla.com</b></a>. Nothing is sent until you send it.</p>
-   </div>
-  </div>
- </div>
-</section>
 
 <section class="sec" id="faq">
  <div class="wrap">
@@ -621,7 +622,7 @@ a.copy{display:inline-flex;align-items:center;text-decoration:none}
 <div class="mbar" aria-label="Quick contact">
  <a class="btn btn--ghost" href="tel:+12137700389" data-tel>Call</a>
  <a class="btn btn--ghost" href="sms:+12137700389" data-sms>Text</a>
- <a class="btn" href="#quote">Quote</a>
+ <a class="btn" href="#book">Quote</a>
 </div>
 
 <script>
@@ -811,8 +812,8 @@ setupAC("pick");setupAC("drop");
 $("#useMe").addEventListener("click",function(){var btn=this;if(!navigator.geolocation){dOut.textContent="Your browser can't share location. Type your address instead.";return}
  btn.textContent="Finding you…";navigator.geolocation.getCurrentPosition(function(p){var c=[p.coords.longitude,p.coords.latitude];CO.pick=c;
   fetch("https://photon.komoot.io/reverse?lon="+c[0]+"&lat="+c[1]).then(function(r){return r.json()}).then(function(j){F.pick.value=j.features&&j.features.length?label(j.features[0]).full:"My current location ("+c[1].toFixed(5)+", "+c[0].toFixed(5)+")"})
-  .catch(function(){F.pick.value="My current location ("+c[1].toFixed(5)+", "+c[0].toFixed(5)+")"}).then(function(){btn.textContent="Use my current location";build();maybeCalc()})},
-  function(){btn.textContent="Use my current location";dOut.textContent="Location access was blocked. Type your pickup address instead."},{enableHighAccuracy:true,timeout:10000})});
+  .catch(function(){F.pick.value="My current location ("+c[1].toFixed(5)+", "+c[0].toFixed(5)+")"}).then(function(){btn.innerHTML="&#x2316; Use my current location";build();maybeCalc()})},
+  function(){btn.innerHTML="&#x2316; Use my current location";dOut.textContent="Location access was blocked. Type your pickup address instead."},{enableHighAccuracy:true,timeout:10000})});
 function coordFor(key){if(CO[key])return Promise.resolve(CO[key]);var q=F[key].value.trim();
  return photon(q).then(function(r){if(!r.length)throw new Error("nf:"+q);CO[key]=r[0].c;return r[0].c})}
 function maybeCalc(){if(F.pick.value.trim()&&F.drop.value.trim())calcDist()}
