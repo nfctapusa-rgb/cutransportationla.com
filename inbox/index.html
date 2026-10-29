@@ -102,6 +102,8 @@ button{cursor:pointer}
 .item.unread::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--brand)}
 .item.unread .who{font-weight:700}
 .item.unread .when b{width:.5rem;height:.5rem;border-radius:50%;background:var(--accent)}
+.tag--imp{background:#fde9c4!important;color:#7a4a00!important}
+select.btn{appearance:auto;font-family:var(--body);text-transform:none;letter-spacing:0;font-weight:600;font-size:.9rem}
 .tag{display:inline-block;font-family:var(--disp);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.7rem;padding:.05rem .4rem;border-radius:3px;background:var(--sel);color:var(--accent);margin-right:.35rem;vertical-align:1px}
 .empty{padding:2.5rem 1.2rem;color:var(--dim);text-align:center}
 
@@ -208,6 +210,9 @@ button{cursor:pointer}
  <symbol id="i-plus" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></symbol>
  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0"/></symbol>
  <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="19" r="1.4"/></symbol>
+ <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></symbol>
+ <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></symbol>
+ <symbol id="i-spam" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></symbol>
  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></symbol>
 </svg>
 
@@ -228,8 +233,11 @@ button{cursor:pointer}
   <div class="brand"><img src="/assets/logo-gold.png" alt=""><b>Clarity Ultimate<small>Inbox</small></b></div>
   <button class="btn compose-btn" id="composeBtn"><svg class="ic"><use href="#i-pen"/></svg>Compose</button>
   <ul class="nav" role="list">
-   <li><button data-f="inbox" aria-current="true"><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="count hide" id="cInbox"></span></button></li>
-   <li><button data-f="quotes"><svg class="ic"><use href="#i-quote"/></svg>Quote requests<span class="count hide" id="cQuotes"></span></button></li>
+   <li><button data-f="inbox" aria-current="true"><svg class="ic"><use href="#i-inbox"/></svg>All mail<span class="count hide" id="cInbox"></span></button></li>
+   <li><button data-f="leads"><svg class="ic"><use href="#i-quote"/></svg>Leads<span class="count hide" id="cLeads"></span></button></li>
+   <li><button data-f="important"><svg class="ic"><use href="#i-star"/></svg>Important<span class="count hide" id="cImportant"></span></button></li>
+   <li><button data-f="other"><svg class="ic"><use href="#i-tag"/></svg>Other / promos</button></li>
+   <li><button data-f="spam"><svg class="ic"><use href="#i-spam"/></svg>Spam</button></li>
    <li><button data-f="sent"><svg class="ic"><use href="#i-sent"/></svg>Sent</button></li>
    <li><button data-f="trash"><svg class="ic"><use href="#i-trash"/></svg>Trash</button></li>
   </ul>
@@ -272,7 +280,7 @@ button{cursor:pointer}
 (function(){
 var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 var state={folder:'inbox',items:[],current:null,msg:null,q:''};
-var TITLES={inbox:'Inbox',quotes:'Quote requests',sent:'Sent',trash:'Trash'};
+var TITLES={inbox:'All mail',leads:'Leads',important:'Important',other:'Other / promos',spam:'Spam',sent:'Sent',trash:'Trash'};
 var COLORS=['#7a5c12','#14532d','#7c2d12','#1e3a8a','#6b21a8','#9f1239','#0f766e','#854d0e','#334155','#155e75'];
 function toast(t){var el=$('#toast');el.textContent=t;el.classList.remove('hide');clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.add('hide')},2600)}
 function api(path,opts){opts=opts||{};opts.credentials='same-origin';if(opts.body&&typeof opts.body!=='string'){opts.headers={'Content-Type':'application/json'};opts.body=JSON.stringify(opts.body)}
@@ -281,13 +289,25 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){retur
 function when(iso){var d=new Date(iso),n=new Date();if(d.toDateString()===n.toDateString())return d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
  var y=new Date(n);y.setDate(n.getDate()-1);if(d.toDateString()===y.toDateString())return 'Yesterday';
  return d.toLocaleDateString([],{month:'short',day:'numeric'})}
+var CATS={};try{CATS=JSON.parse(localStorage.getItem('cuinbox-cats')||'{}')}catch(_){}
+function saveCat(m,c){var k=(m.from&&m.from.address||'')+'|'+m.subject;if(c)CATS[k]=c;else delete CATS[k];try{localStorage.setItem('cuinbox-cats',JSON.stringify(CATS))}catch(_){}}
+function category(m){var k=(m.from&&m.from.address||'')+'|'+m.subject;if(CATS[k])return CATS[k];
+ var subj=m.subject||'',from=((m.from&&m.from.address)||'')+' '+((m.from&&m.from.name)||''),t=(subj+' '+from).toLowerCase();
+ if(isQuote(m))return 'leads';
+ var bulk=/no-?reply|donotreply|newsletter|mailer|marketing|promo|news@|deals|offers|notifications?@|updates@|hello@|team@|digest/.test(from.toLowerCase())||/% off|sale\b|deal|offer|webinar|newsletter|unsubscribe|limited time|free trial|black friday|save \$|coupon/.test(subj.toLowerCase());
+ var imp=/invoice|payment|paid|receipt|refund|bank|statement|verify|verification|security|password|sign-?in|login|account|contract|insurance|license|permit|dmv|irs|tax|court|ticket|citation|registration|renewal|expire|overdue|urgent|porkbun|vercel|google business|stripe|square|paypal/.test(t);
+ var lead=/quote|price|pricing|rate|rates|cost|how much|book|booking|reserv|availab|pick ?up|drop ?off|airport|lax|wedding|event|party|prom|concert|trip|ride|transport|shuttle|sprinter|van|chauffeur|hourly|disney/.test(subj.toLowerCase());
+ if(lead&&!bulk)return 'leads';
+ if(imp)return 'important';
+ if(bulk)return 'other';
+ return /^(re|fw|fwd):/i.test(subj)?'important':'leads';}
 function isQuote(m){return /quote request|ride request|booking request|would like a quote/i.test(m.subject||'')}
 function person(m){return state.folder==='sent'?m.to:m.from}
 function nameOf(a){return (a&&(a.name||a.address))||'(unknown)'}
 function initials(s){s=String(s||'?').replace(/[<>"]/g,'').trim();var p=s.split(/[\s@._-]+/).filter(Boolean);return ((p[0]||'?')[0]+(p.length>1?p[1][0]:'')).toUpperCase()}
 function color(s){var h=0;s=String(s||'');for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return COLORS[h%COLORS.length]}
 function avatar(a,cls){var key=(a&&(a.address||a.name))||'';return '<span class="av'+(cls?' '+cls:'')+'" style="background:'+color(key)+'">'+esc(initials(nameOf(a)))+'</span>'}
-function apiFolder(){return state.folder==='quotes'?'inbox':state.folder}
+var VIEWS={leads:1,important:1,other:1};function apiFolder(){return VIEWS[state.folder]?'inbox':state.folder}
 
 /* ---- views ---- */
 function showLogin(){$('#appView').classList.add('hide');$('#loginView').classList.remove('hide');setTimeout(function(){$('#pw').focus()},50)}
@@ -301,21 +321,21 @@ $('#menuBtn').addEventListener('click',function(){nav(true)});$('#scrim').addEve
 /* ---- folders + list ---- */
 $$('.nav button[data-f]').forEach(function(b){b.addEventListener('click',function(){
  $$('.nav button[data-f]').forEach(function(x){x.setAttribute('aria-current',x===b?'true':'false')});
- var nf=b.dataset.f,reload=(nf==='quotes'?'inbox':nf)!==apiFolder();state.folder=nf;$('#folderTitle').textContent=TITLES[nf];nav(false);closeReader();
+ var nf=b.dataset.f,reload=(VIEWS[nf]?'inbox':nf)!==apiFolder();state.folder=nf;$('#folderTitle').textContent=TITLES[nf];nav(false);closeReader();
  if(reload)load();else render()})});
 function load(silent){if(!silent)$('#list').innerHTML='<li class="empty"><span class="spin"></span> Loading&hellip;</li>';
  return api('/api/messages?folder='+apiFolder()+'&limit=80').then(function(j){state.items=j.messages||[];
-  if(apiFolder()==='inbox'){badge('#cInbox',j.unread);badge('#cQuotes',state.items.filter(function(m){return isQuote(m)&&!m.seen}).length);try{document.title=(j.unread?'('+j.unread+') ':'')+'CU Inbox'}catch(_){}}
+  if(apiFolder()==='inbox'){badge('#cInbox',j.unread);['leads','important'].forEach(function(c){badge('#c'+c[0].toUpperCase()+c.slice(1),state.items.filter(function(m){return !m.seen&&category(m)===c}).length)});try{document.title=(j.unread?'('+j.unread+') ':'')+'CU Inbox'}catch(_){}}
   render()}).catch(function(err){if(err.message!=='auth')$('#list').innerHTML='<li class="empty">'+esc(err.message)+'</li>'})}
 function badge(sel,n){var b=$(sel);if(n){b.textContent=n;b.classList.remove('hide')}else b.classList.add('hide')}
-function visible(){var items=state.items;if(state.folder==='quotes')items=items.filter(isQuote);
+function visible(){var items=state.items;if(VIEWS[state.folder])items=items.filter(function(m){return category(m)===state.folder});
  if(state.q){var q=state.q.toLowerCase();items=items.filter(function(m){var a=person(m)||{};return (m.subject+' '+a.name+' '+a.address).toLowerCase().indexOf(q)>-1})}return items}
 function render(){var list=$('#list'),items=visible();$('#folderCount').textContent=items.length?items.length+(items.length===1?' message':' messages'):'';
- if(!items.length){list.innerHTML='<li class="empty">'+(state.q?'No messages match &ldquo;'+esc(state.q)+'&rdquo;.':state.folder==='quotes'?'No quote requests yet. They show up here when customers tap Email us on the website.':'Nothing here yet.')+'</li>';return}
+ if(!items.length){list.innerHTML='<li class="empty">'+(state.q?'No messages match &ldquo;'+esc(state.q)+'&rdquo;.':state.folder==='leads'?'No leads yet. Quote requests from the website and customer emails land here.':state.folder==='spam'?'No spam. Nice.':'Nothing here yet.')+'</li>';return}
  list.innerHTML='';items.forEach(function(m){var a=person(m)||{};var li=document.createElement('li');var unread=!m.seen&&state.folder!=='sent';
   li.className='item'+(unread?' unread':'');li.tabIndex=0;li.setAttribute('role','button');
   if(state.current&&state.current.uid===m.uid)li.setAttribute('aria-current','true');
-  li.innerHTML=avatar(a)+'<span class="who">'+esc(nameOf(a))+'</span><span class="when">'+(unread?'<b></b>':'')+esc(when(m.date))+'</span><span class="line">'+(isQuote(m)?'<span class="tag">Quote</span>':'')+'<em>'+esc(m.subject)+'</em></span>';
+  li.innerHTML=avatar(a)+'<span class="who">'+esc(nameOf(a))+'</span><span class="when">'+(unread?'<b></b>':'')+esc(when(m.date))+'</span><span class="line">'+(apiFolder()==='inbox'?({leads:'<span class="tag">'+(isQuote(m)?'Quote':'Lead')+'</span>',important:'<span class="tag tag--imp">Important</span>',other:''})[category(m)]:'')+'<em>'+esc(m.subject)+'</em></span>';
   li.addEventListener('click',function(){open(m)});li.addEventListener('keydown',function(e){if(e.key==='Enter')open(m)});list.appendChild(li)})}
 var qt;$('#q').addEventListener('input',function(e){clearTimeout(qt);qt=setTimeout(function(){state.q=e.target.value.trim();render()},120)});
 function refresh(){load().then(function(){toast('Up to date')})}
@@ -337,26 +357,28 @@ function showMsg(d){state.msg=d;var pane=$('#readpane');var who=(state.folder===
  var dt=new Date(d.date);
  var h='<div class="reader">'+backBtn()+
   '<div class="rhead">'+avatar(who)+'<div style="min-width:0"><h2>'+esc(nameOf(who))+'</h2><div class="addr">'+esc(who.address||'')+'</div></div>'+
-  '<div class="ract"><button class="tool" data-act="unread" title="Mark unread" aria-label="Mark unread"><svg class="ic"><use href="#i-unread"/></svg></button><button class="tool" data-act="delete" title="Delete" aria-label="Delete"><svg class="ic"><use href="#i-trash"/></svg></button></div></div>'+
+  '<div class="ract"><button class="tool" data-act="unread" title="Mark unread" aria-label="Mark unread"><svg class="ic"><use href="#i-unread"/></svg></button>'+(state.folder==='spam'?'<button class="tool" data-act="notspam" title="Not spam" aria-label="Not spam"><svg class="ic"><use href="#i-inbox"/></svg></button>':'<button class="tool" data-act="spam" title="Mark as spam" aria-label="Mark as spam"><svg class="ic"><use href="#i-spam"/></svg></button>')+'<button class="tool" data-act="delete" title="Delete" aria-label="Delete"><svg class="ic"><use href="#i-trash"/></svg></button></div></div>'+
   '<div class="subj"><h3>'+esc(d.subject)+'</h3><time datetime="'+esc(d.date)+'">'+esc(dt.toLocaleDateString([],{month:'short',day:'numeric',year:'numeric'})+' @ '+dt.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}))+'</time></div>'+
   (state.folder==='sent'?'<div class="addr" style="color:var(--dim);font-size:.88rem">To: '+fmtList(d.to)+'</div>':'')+
   quick(d)+
   (d.html?'<iframe class="bodyhtml" sandbox="allow-popups allow-popups-to-escape-sandbox" referrerpolicy="no-referrer" title="Message"></iframe>':'<div class="bodytext">'+esc(d.text||'(empty message)')+'</div>')+
   (d.attachments&&d.attachments.length?'<div class="atts"><span>'+d.attachments.length+' attachment'+(d.attachments.length>1?'s':'')+' (download in Porkbun webmail):</span>'+d.attachments.map(function(a){return '<span class="f">'+esc(a.filename)+'</span>'}).join('')+'</div>':'')+
-  '<div class="mobile-acts" style="display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn--line" data-act="unread">Mark unread</button><button class="btn btn--line" data-act="delete">Delete</button></div>'+
+  '<div class="mobile-acts" style="display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn--line" data-act="unread">Mark unread</button><button class="btn btn--line" data-act="delete">Delete</button>'+(state.folder==='spam'?'<button class="btn btn--line" data-act="notspam">Not spam</button>':'<button class="btn btn--line" data-act="spam">Spam</button>')+(apiFolder()==='inbox'?'<select class="btn btn--line" data-sel="cat" aria-label="Move to"><option value="">Move to&hellip;</option><option value="leads">Leads</option><option value="important">Important</option><option value="other">Other / promos</option></select>':'')+'<span hidden></button></div>'+
  '</div>';
  if(state.folder!=='sent'&&state.folder!=='trash'){h+='<form class="replybox" id="rbox"><div class="modes" role="group" aria-label="Reply type"><button type="button" data-mode="reply" aria-pressed="true"><svg class="ic"><use href="#i-reply"/></svg>Reply</button><button type="button" data-mode="fwd" aria-pressed="false"><svg class="ic"><use href="#i-fwd"/></svg>Forward</button></div>'+
   '<input class="field hide" type="email" id="fwdTo" placeholder="Forward to email address" multiple>'+
   '<textarea id="rtext" placeholder="Write your reply to '+esc(nameOf(who))+'&hellip;"></textarea>'+
   '<div class="row"><span class="to" id="rto">To: '+esc((d.replyTo&&d.replyTo[0]||d.from&&d.from[0]||{}).address||'')+'</span><button class="btn btn--dark" type="submit" id="rsend">Send</button></div></form>'}
  pane.innerHTML=h;
- var mo=$('.mobile-acts',pane);if(mo&&matchMedia('(min-width:821px)').matches)mo.remove();
+ var mo=$('.mobile-acts',pane);if(mo&&matchMedia('(min-width:821px)').matches)$$('[data-act=unread],[data-act=delete],[data-act=spam],[data-act=notspam]',mo).forEach(function(x){x.remove()});
  var fr=$('iframe',pane);if(fr){fr.srcdoc='<!doctype html><meta charset="utf-8"><base target="_blank"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; img-src https: data:; style-src \'unsafe-inline\'; font-src https: data:"><style>body{font-family:system-ui,sans-serif;margin:14px;color:#222;word-wrap:break-word}img{max-width:100%;height:auto}</style>'+d.html;
   fr.addEventListener('load',function(){try{fr.style.height=Math.max(360,fr.contentDocument.documentElement.scrollHeight+30)+'px'}catch(_){}})}
  wire();wireReply(d)}
-function wire(){$$('[data-act]',$('#readpane')).forEach(function(b){b.addEventListener('click',function(){act(b.dataset.act,b)})})}
+function wire(){var sel=$('[data-sel=cat]',$('#readpane'));if(sel){var mo=$('.mobile-acts',$('#readpane'));sel.addEventListener('change',function(){if(!sel.value)return;saveCat(state.current,sel.value);toast('Moved to '+TITLES[sel.value]);closeReader();render();load(true)})}
+ $$('[data-act]',$('#readpane')).forEach(function(b){b.addEventListener('click',function(){act(b.dataset.act,b)})})}
 function act(a,btn){var d=state.msg;
  if(a==='back'){closeReader();return}
+ if(a==='spam'||a==='notspam'){api('/api/message',{method:'POST',body:{folder:apiFolder(),uid:d.uid,action:a}}).then(function(){toast(a==='spam'?'Moved to spam':'Moved back to inbox');closeReader();load(true)}).catch(function(err){if(err.message!=='auth')toast(err.message)});return}
  if(a==='unread'||a==='delete'){if(a==='delete'&&!sure(btn))return;
   api('/api/message',{method:'POST',body:{folder:apiFolder(),uid:d.uid,action:a}}).then(function(){toast(a==='delete'?'Moved to trash':'Marked unread');closeReader();load(true)}).catch(function(err){if(err.message!=='auth')toast(err.message)})}}
 function sure(b){if(b.dataset.sure)return true;b.dataset.sure='1';var old=b.innerHTML;b.innerHTML=b.classList.contains('tool')?'<svg class="ic" style="color:var(--warn)"><use href="#i-trash"/></svg>':'Tap again to delete';
@@ -419,15 +441,13 @@ $('#nbarOn').addEventListener('click',function(){wizard(['notify'])});$('#nbarX'
 $('#setupBtn').addEventListener('click',function(){nav(false);wizard(['install','notify'])});
 function afterSignIn(){api('/api/me').then(function(j){me=j;var steps=[];
  if(j.setup)steps.push('password');
- if(!standalone()&&!ls().installSeen)steps.push('install');
- if(!notifOn()&&!ls().notifySeen)steps.push('notify');
- if(steps.length)wizard(steps,true);updateBar()}).catch(function(){})}
+  if(steps.length)wizard(steps,true);updateBar()}).catch(function(){})}
 
 var wz={steps:[],i:0};
 function wizard(steps,first){wz.steps=steps;wz.i=0;wz.first=first;$('#ob').classList.remove('hide');step()}
 function done(){$('#ob').classList.add('hide');updateBar()}
 function next(){wz.i++;if(wz.i>=wz.steps.length){finish()}else step()}
-function finish(){if(wz.first){$('#obDots').innerHTML='';$('#obSub').textContent='All set';
+function finish(){if(false){$('#obDots').innerHTML='';$('#obSub').textContent='All set';
  $('#obPane').innerHTML='<div class="ob__body"><div class="ok">&#10003; You&rsquo;re all set</div><p>New emails and quote requests from the website show up here. You&rsquo;ll stay signed in on this device.</p><p class="tip">You can change your password or turn notifications on later from the menu.</p></div><div class="ob__foot"><button class="btn btn--dark" id="obGo">Go to my inbox</button></div>';
  $('#obGo').addEventListener('click',done);$('#obGo').focus()}else done()}
 function dots(){$('#obDots').innerHTML=wz.steps.length>1?wz.steps.map(function(_,k){return '<i class="'+(k<=wz.i?'on':'')+'"></i>'}).join(''):''}
@@ -449,7 +469,7 @@ function stepPassword(){$('#obSub').textContent='Step '+(wz.i+1)+' of '+wz.steps
   var btn=$('#obSave');btn.disabled=true;btn.innerHTML='<span class="spin"></span> Saving';
   api('/api/password',{method:'POST',body:{current:state.setupPw||$('#obCur').value,next:a}}).then(function(){state.setupPw=null;
    try{if(window.PasswordCredential&&navigator.credentials){navigator.credentials.store(new PasswordCredential({id:'info@cutransportationla.com',password:a,name:'CU Inbox'})).catch(function(){})}}catch(_){}
-   toast('Password saved');next()}).catch(function(e2){if(e2.message!=='auth')err.textContent=e2.message}).then(function(){if(btn.isConnected){btn.disabled=false;btn.textContent='Save my password'}})})}
+   toast('Password saved \u2713');next()}).catch(function(e2){if(e2.message!=='auth')err.textContent=e2.message}).then(function(){if(btn.isConnected){btn.disabled=false;btn.textContent='Save my password'}})})}
 
 function stepInstall(){$('#obSub').textContent='Step '+(wz.i+1)+' of '+wz.steps.length;var h='<div class="ob__body"><h2 id="obTitle">Put CU Inbox on your home screen</h2>';
  if(standalone()){h+='<div class="ok">&#10003; Already on your home screen</div></div>'}

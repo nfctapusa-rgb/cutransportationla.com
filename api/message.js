@@ -16,6 +16,16 @@ module.exports = guard(async (req, res) => {
     try {
       if (req.method === 'POST') {
         if (body.action === 'unread') await client.messageFlagsRemove(String(uid), ['\\Seen'], { uid: true });
+        else if (body.action === 'spam' || body.action === 'notspam') {
+          let dest = 'INBOX';
+          if (body.action === 'spam') {
+            const list = await client.list();
+            const junk = list.find((b) => b.specialUse === '\\Junk') || list.find((b) => /^(INBOX\.)?(junk|spam)$/i.test(b.path));
+            dest = junk ? junk.path : 'Junk';
+            if (!junk) await client.mailboxCreate(dest);
+          }
+          await client.messageMove(String(uid), dest, { uid: true });
+        }
         else if (body.action === 'delete') {
           const list = await client.list();
           const trash = list.find((b) => b.specialUse === '\\Trash');

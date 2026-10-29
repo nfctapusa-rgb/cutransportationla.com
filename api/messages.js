@@ -1,13 +1,13 @@
 // List recent messages in a folder (default INBOX).
 const { guard, send, withImap } = require('./_lib');
 
-const FOLDERS = { inbox: 'INBOX', sent: ['Sent', 'INBOX.Sent', 'Sent Messages', 'Sent Items'], trash: ['Trash', 'INBOX.Trash', 'Deleted Messages'] };
+const FOLDERS = { inbox: 'INBOX', sent: ['Sent', 'INBOX.Sent', 'Sent Messages', 'Sent Items'], trash: ['Trash', 'INBOX.Trash', 'Deleted Messages'], spam: ['Junk', 'Spam', 'INBOX.Junk', 'INBOX.Spam', 'Junk E-mail'] };
 
 async function openFolder(client, key) {
   const want = FOLDERS[key] || 'INBOX';
   if (typeof want === 'string') return client.getMailboxLock(want);
   const list = await client.list();
-  const bySpecial = list.find((b) => b.specialUse === (key === 'sent' ? '\\Sent' : '\\Trash'));
+  const bySpecial = list.find((b) => b.specialUse === ({ sent: '\\Sent', trash: '\\Trash', spam: '\\Junk' })[key]);
   const name = bySpecial ? bySpecial.path : (list.find((b) => want.includes(b.path)) || {}).path;
   if (!name) return null;
   return client.getMailboxLock(name);
